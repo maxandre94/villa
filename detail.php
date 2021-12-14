@@ -14,7 +14,7 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
 
 ?>
 <!DOCTYPE html>
-<html class="no-js" lang="en">
+<html class="no-js" lang="fr">
 
 <head>
     <meta charset="utf-8">
@@ -102,7 +102,7 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                             <div class="row">
                                 <div class="col-md-2 col-sm-2 col-xs-12">
                                     <div class="logo mt-15">
-                                        <a href="index.html"><img src="images/logo/logo.png" alt=""></a>
+                                        <a href="index.php"><img src="images/logo/logo.png" alt=""></a>
                                     </div>
                                 </div>
                                 <div class="col-md-10 col-sm-10 hidden-xs">
