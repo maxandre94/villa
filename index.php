@@ -101,7 +101,7 @@ $_SESSION['langue']='Français';
                                             <form action="redirect.php" method="post">
                                                 <select class="" id="chb_type" name="lang" style="background-color: white;color:black" onchange="this.form.submit()">
                                                     
-                                            <option value="Français">Français</option>
+                                            <option value="Français" selected="selected">Français</option>
                                             <option value="Anglais">Anglais</option>
                                                     
                                                 </select>

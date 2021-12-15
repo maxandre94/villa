@@ -7,7 +7,7 @@ if(isset($_POST['lang'])){
     if($_SESSION['langue']=='Anglais'){
         //page anglaise
         //header('Location:detail.php');
-        echo $_SESSION['langue'];
+        header('Location:indexang.php');
     }else{
 //page française
 header('Location:./');
