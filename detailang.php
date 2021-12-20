@@ -5,16 +5,16 @@ session_start();
 //$_SESSION['resa'] = null;
 //print_r($_SESSION['utilisateur']);
 
-
 require_once './connection.php';
 require_once './admin/config.php';
 
 $types = $connect_PDO->query('SELECT * from type')->fetchAll();
 
 
+
 ?>
 <!DOCTYPE html>
-<html class="no-js" lang="fr">
+<html class="no-js" lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -102,14 +102,14 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                             <div class="row">
                                 <div class="col-md-2 col-sm-2 col-xs-12">
                                     <div class="logo mt-15">
-                                        <a href="index.php"><img src="images/logo/logo.png" alt=""></a>
+                                        <a href="indexang.php"><img src="images/logo/logo.png" alt=""></a>
                                     </div>
                                 </div>
                                 <div class="col-md-10 col-sm-10 hidden-xs">
                                     <div class="header-top ptb-10">
                                         <div class="adresses">
                                             <div class="phone">
-                                                <p>Téléphone : <span>+225 07 07 43 43 94</span></p>
+                                                <p>Phone: <span>+225 07 07 43 43 94</span></p>
                                             </div>
                                             <div class="email">
                                                 <p>Email: <span>reservation@villa_blanca.ci</span></p>
@@ -120,11 +120,11 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                                         <div class="menu-list hidden-sm hidden-xs">
                                             <nav>
                                                 <ul>
-                                                    <li><a href="chambres.html">Chambres</a></li>
-                                                    <li><a href="seminaires.html">Séminaires</a></li>
-                                                    <li><a href="resto.html">Restaurant</a></li>
-                                                    <li><a href="loisirs.html">Nos loisirs</a></li>
-                                                    <li><a href="detail.php" class="btn btn-danger">Reservation</a></li>
+                                                    <li><a href="chambres.php">ROOMS</a></li>
+                                                    <li><a href="seminaires.php">SEMINARS</a></li>
+                                                    <li><a href="resto.php">RESTAURANT</a></li>
+                                                    <li><a href="loisirs.php">HOBBIES</a></li>
+                                                    <li><a href="detailang.php" class="btn btn-danger">RESERVATION</a></li>
                                                     <?php if (isset($_SESSION['utilisateur'])) {
                                                         $req = $bdd->prepare('SELECT * FROM facture WHERE id_cl=?');
                                                         $req->execute(array($_SESSION['utilisateur']));
@@ -153,7 +153,7 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                                                             background: green;">' . $row . '</span></a></li>';
                                                         }
                                                     } else {
-                                                        echo '<li><a href="connexionClient.php">Connexion</a></li>';
+                                                        echo '<li><a href="connexionClient.php">Connection</a></li>';
                                                     }
                                                     ?>
 
@@ -172,10 +172,10 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                         <div class="col-md-12">
                             <nav id="dropdown">
                                 <ul>
-                                    <li><a href="chambres.html">Chambres</a></li>
-                                    <li><a href="seminaires.html">Séminaires</a></li>
-                                    <li><a href="resto.html">Restaurant</a></li>
-                                    <li><a href="loisirs.html">Nos loisirs</a></li>
+                                    <li><a href="chambres.php">ROOMS</a></li>
+                                    <li><a href="seminaires.php">SEMINARS</a></li>
+                                    <li><a href="resto.php">RESTAURANT</a></li>
+                                    <li><a href="loisirs.php">HOBBIES</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -190,7 +190,7 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="breadcurbs-inner">
                                 <div class="breadcrubs">
-                                    <h2>Réservations</h2>
+                                    <h2>RESERVATION</h2>
                                 </div>
                             </div>
                         </div>
@@ -230,7 +230,7 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                     <div class="col-md-12">
                         <div class="section-title mb-50">
                             <h2>
-                                <h1 style="font-family: 'Reggae One', cursive;">Réservez vos chambres</h1>
+                                <h1 style="font-family: 'Reggae One', cursive;">Reserve your rooms</h1>
                             </h2>
                         </div>
                     </div>
@@ -243,13 +243,12 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                         <div class="col-md-12">
                             <div class="booking-rooms-tab text-left">
                                 <ul class="nav" role="tablist">
-                                    <li class="active"><a href="/villa/detail.php" data-toggle="tab" name="section1"><span class="tab-border">1</span><span>Infos
-                                                chambres</span></a></li>
-                                    <li><a href="/villa/detail-facture.php" data-toggle="tab"><span class="tab-border">2</span><span>Détails facture</span></a>
+                                    <li class="active"><a href="/villa/detail.php" data-toggle="tab" name="section1"><span class="tab-border">1</span><span>Rooms infos</span></a></li>
+                                    <li><a href="/villa/detail-facture.php" data-toggle="tab"><span class="tab-border">2</span><span>Invoice details</span></a>
                                     </li>
-                                    <li><a href="/villa/infocl.php" data-toggle="tab"><span class="tab-border">3</span><span>Infos client(s)</span></a>
+                                    <li><a href="/villa/infocl.php" data-toggle="tab"><span class="tab-border">3</span><span>Customer(s) Info</span></a>
                                     </li>
-                                    <li><a href="#payment" data-toggle="tab"><span class="tab-border">4</span><span>règlement</span></a>
+                                    <li><a href="#payment" data-toggle="tab"><span class="tab-border">4</span><span>Regulation</span></a>
                                     </li>
 
                                 </ul>
@@ -265,10 +264,10 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <div class="booking-rooms-tab text-left"><div class="room-img"><img src=' . $type->img_typ . ' style="width: 250px; height: 250px;" alt=""><div style="padding:20px;flex-grow: 1;border-bottom:1px gainsboro solid">
-                                    <div style="font-weight: bolder;font-size: 15px;text-align: center">' . $type->nom_typ . '</div>
-                                    <div style="padding:10px 0;display: flex;align-items: center;justify-content: center"> <span style="font-size: 15px">' . $type->prix_sem . '</span> &nbsp; / jour de semaine</div>
+                                    <div style="font-weight: bolder;font-size: 15px;text-align: center">' . $type->nom_typ_ang . '</div>
+                                    <div style="padding:10px 0;display: flex;align-items: center;justify-content: center"> <span style="font-size: 15px">' . $type->prix_sem . '</span> &nbsp; / weekday</div>
 
-                                    <div style="padding:5px 0;display: flex;align-items: center;justify-content: center"> <span style="font-size: 15px">' . $type->prix_week . '</span> &nbsp; / jour de weekend</div>
+                                    <div style="padding:5px 0;display: flex;align-items: center;justify-content: center"> <span style="font-size: 15px">' . $type->prix_week . '</span> &nbsp; / weekend day</div>
                                 </div></div></div></div></div></div>';
                                 }
 
@@ -277,30 +276,31 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                             </div>
                         </div><br><label> &nbsp </label>
 
-                        <form action="/resaAjout.php" method="POST" class="insert-form" id="formulaire" name="formulaire">
+                        <form action="/resaAjoutang.php" method="POST" class="insert-form" id="formulaire" name="formulaire">
                             <div class="form-row">
                                 <div class="form-group col-md-2">
-                                    <label for="validationCustom02" class="form-label" style="font-family:Segoe UI semibold; ">Arrivée</label>
+                                    <label for="validationCustom02" class="form-label" style="font-family:Segoe UI semibold; ">Arrival</label>
                                     <input type="date" name="arrive" id="arrive" value="<?php echo date('Y-m-d'); ?>" />
                                 </div>
                                 <div class="form-group col-md-2">
-                                    <label for="validationCustom02" class="form-label" style="font-family:Segoe UI semibold; ">Depart</label>
+                                    <label for="validationCustom02" class="form-label" style="font-family:Segoe UI semibold; ">Departure</label>
                                     <input type="date" class="" name="depart" id="depart" value="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" />
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label for="nomb">Type de chambre</label>
+                                    <label for="nomb">Room type</label>
                                     <!--<select class="" id="chb_type" name="chb_type" onchange="alert(this.value)">-->
                                     <select class="" id="chb_type" name="chb_type">
                                         <?php
                                         foreach ($types as $type) {
                                             $type_nom = str_replace(' ', '.', $type->nom_typ);
+                                            $type_nom_ang = str_replace(' ', '.', $type->nom_typ_ang);
                                             echo '
-                                <option value=' . $type->id_typ . '|' . $type_nom . '|' . $type->prix_sem . '|' . $type->prix_week . '>' . $type->nom_typ . '</option>';
+                                <option value=' . $type->id_typ . '|' . $type_nom . '|' . $type->prix_sem . '|' . $type->prix_week . '|' . $type_nom_ang . '>' . $type->nom_typ_ang . '</option>';
                                         } ?>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-2">
-                                    <label for="nbch" class="">Nombre de chambre</label>
+                                    <label for="nbch" class="">Room number</label>
                                     <select class="" id="chb_nb" name="chb_nb">
                                         <?php for ($i = 1; $i <= 20; $i++) {
                                             echo '<option value=' . $i . '>' . $i . '</option>';
@@ -308,7 +308,7 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                                     </select>
                                 </div>
                                 <div class="form-group col-md-2">
-                                    <label for="nbper" class="">Nombre de personne</label>
+                                    <label for="nbper" class="">Number of people</label>
                                     <select class="" id="pers_nb" name="pers_nb">
                                         <?php for ($i = 1; $i <= 20; $i++) {
                                             echo '<option value=' . $i . '>' . $i . '</option>';
@@ -317,7 +317,7 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                                 </div>
 
                             </div>
-                            <br><br /><input class="btn btn-success" type="submit" style="width:85px;height: 34px;" name="add" id="add" value="Réserver">
+                            <br><br /><input class="btn btn-success" type="submit" style="width:85px;height: 34px;" name="add" id="add" value="Reserve">
 
                         </form>
 
@@ -334,7 +334,7 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                                 case 'date':
                         ?>
                                     <div class="alert alert-danger">
-                                        <strong>Erreur</strong> la date d'arrivée doit être suppérieure à la date de départ
+                                        <strong>Error</strong> the arrival date must be later than the departure date
                                     </div>
                                 <?php
                                     break;
@@ -342,7 +342,7 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                                 case 'datejour':
                                 ?>
                                     <div class="alert alert-danger">
-                                        <strong>Erreur</strong> la date d'arrivée doit être au mois égale à la date du jour
+                                        <strong>Error</strong> the arrival date must be in the month equal to the current date
                                     </div>
                                 <?php
                                     break;
@@ -350,8 +350,7 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                                 case 'chambre':
                                 ?>
                                     <div class="alert alert-danger">
-                                        <strong>Erreur</strong> le nombre de personne doit être suppérieur ou égale au nombre de
-                                        chambre
+                                        <strong>Error</strong> the number of people must be greater than or equal to the number of rooms
                                     </div>
                         <?php
                                     break;
@@ -360,15 +359,15 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                         ?>
 
                         <table class="table table-bordered">
-                            <caption>Detail de votre réservation</caption>
+                            <caption>Detail of your reservation</caption>
                             <thead>
                                 <tr>
                                     <th scope="col"></th>
-                                    <th scope="col">Arrivée</th>
-                                    <th scope="col">Depart</th>
-                                    <th scope="col">Type de chambre</th>
-                                    <th scope="col">Nombre de chambre</th>
-                                    <th scope="col">Nombre de personne</th>
+                                    <th scope="col" >Arrival</th>
+                                    <th scope="col">Departure</th>
+                                    <th scope="col">Room type</th>
+                                    <th scope="col">Room number</th>
+                                    <th scope="col">Number of people</th>
                                 </tr>
                             </thead>
 
@@ -383,10 +382,10 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
 
                                 ?>
                                         <tr>
-                                            <td><input type="button" class="btn btn-danger" onclick="ResaSupprime('<?= $valeur ?>'); " value="Supprimer"></td>
+                                            <td><input type="button" class="btn btn-danger" onclick="ResaSupprime('<?= $valeur ?>'); " value="Delete"></td>
                                             <td><?= date("d/m/Y", strtotime($une_resa['arrive'])) ?></td>
                                             <td><?= date("d/m/Y", strtotime($une_resa['depart'])) ?></td>
-                                            <td><?= $une_resa['chb_nom'] ?></td>
+                                            <td><?= $une_resa['chb_nom_ang'] ?></td>
                                             <td><?= $une_resa['chb_nb'] ?></td>
                                             <td><?= $une_resa['pers_nb'] ?></td>
                                         </tr>
@@ -401,7 +400,7 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                     </div>
                     <br>
                     <center>
-                        <a href="controle.php"><input type="submit" class="btn btn-primary" style="width:160px;height: 34px;" name="save" id="save" value="Étape suivante"></a>
+                        <a href="controleang.php"><input type="submit" class="btn btn-primary" style="width:160px;height: 34px;" name="save" id="save" value="Next step"></a>
                     </center>
 
 
@@ -421,7 +420,7 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="section-title mb-75"><br><br><br><br>
-                                        <h2>Situation <span style="color: rgb(226, 29, 29);">Geographique</span></h2>
+                                        <h2><span style="color: rgb(226, 29, 29);">Geographic</span> location</h2>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -444,27 +443,27 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                                         </div>
                                         <div class="f-adress">
                                             <p>
-                                                Route Assinie-Mafia, KM 12
+                                            Road Assinie-Mafia, KM 12
                                                 Assinie
                                                 Côte d'Ivoire
                                             </p>
 
                                         </div>
                                         <div class="hotel-contact">
-                                            <p><span>Téléphone:</span> +225 07 07 43 43 94.</p>
+                                            <p><span>Phone:</span> +225 07 07 43 43 94.</p>
                                             <p><span>Email:</span> reservation@villa_blanca.ci</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3 hidden-sm col-xs-6">
                                     <div class="single-footer">
-                                        <h3>Plus d'infos</h3>
+                                        <h3>More informations</h3>
                                         <div class="quick-item">
                                             <ul>
-                                                <li><a href="#">Equipement de l'hotel</a></li>
-                                                <li><a href="#">Menu du Restaurant</a></li>
+                                                <li><a href="#">Hotel equipment</a></li>
+                                                <li><a href="#">Restaurant menu</a></li>
                                                 <li><a href="#">Bar</a></li>
-                                                <li><a href="#">loisirs</a></li>
+                                                <li><a href="#">Hobbies</a></li>
                                                 <!--<li><a href="#">Wellness</a></li>-->
                                                 <!--<li><a href="#">Contact</a></li>-->
                                             </ul>
@@ -473,17 +472,17 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                                 </div>
                                 <div class="col-md-3 col-sm-4 col-xs-6">
                                     <div class="single-footer">
-                                        <h3>Nous contacter</h3>
+                                        <h3>Contact us</h3>
                                         <div class="get-touch">
                                             <!--<<p>There are many varins of passages of Lorem Ipsum available, but</p>-->
                                             <div class="get-conatct">
                                                 <form action="#">
-                                                    <input type="text" placeholder="Votre nom">
-                                                    <input type="text" placeholder="Votre Email">
+                                                    <input type="text" placeholder="Your name">
+                                                    <input type="text" placeholder="Your email">
                                                     <div class="form-group">
-                                                        <textarea class="form-control" id="exampleInput" style="color: white;" placeholder="votre message" rows="3"></textarea>
+                                                        <textarea class="form-control" id="exampleInput" style="color: white;" placeholder="Your message" rows="3"></textarea>
                                                     </div>
-                                                    <button type="submit">Envoyer</button>
+                                                    <button type="submit">Send</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -491,7 +490,7 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                                 </div>
                                 <div class="col-md-3 col-sm-4 col-xs-6">
                                     <div class="single-footer">
-                                        <h3>Suivez-nous</h3>
+                                        <h3>Follow us</h3>
                                         <div class="instagram-post">
                                             <div class="single-post">
                                                 <i class="fa fa-twitter fa-3x" style="color: #1DA1F2;" aria-hidden="true"></i>
@@ -527,7 +526,7 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
 
                                 } else {
                                     $.ajax({
-                                        url: 'resaAjout.php',
+                                        url: 'resaAjoutang.php',
                                         type: 'post',
                                         data: 'SAPHIR=' + _saphir,
                                         success: function(html) {
@@ -557,7 +556,7 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                                 //alert('bonjour');
 
                                 $.ajax({
-                                    url: 'resaAjout.php', //url: $this.attr('action'), // Le nom du fichier indiqué dans le formulaire
+                                    url: 'resaAjoutang.php', //url: $this.attr('action'), // Le nom du fichier indiqué dans le formulaire
                                     type: 'post', //type: $this.attr('method'), // La méthode indiquée dans le formulaire (get ou post)
                                     data: $this
                                         .serialize(), // Je sérialise les données (j'envoie toutes les valeurs présentes dans le formulaire)

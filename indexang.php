@@ -180,6 +180,7 @@
                                                         <li><a href="seminaires.php">Seminars</a></li>
                                                         <li><a href="resto.php">Restaurant</a></li>
                                                         <li><a href="loisirs.php">Hobbies</a></li>
+                                                        <li><a href="detailang.php">Reservation</a></li>
                                                         <!--Header section reste du menu
                                                                                                                 <li><a href="gallery-2.html">Gallery</a></li>
                                                                                                                 <li><a href="#">pages<i class="fa fa-angle-down"></i></a>

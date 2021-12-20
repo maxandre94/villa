@@ -736,3 +736,13 @@ villa/resaAjout.php
 villa/resaSup.php
 villa/style.css
 
+cinetpay/composer.json
+cinetpay/exemple/commande.php
+cinetpay/exemple/index.php
+cinetpay/exemple/notify/index.php
+cinetpay/exemple/return/index.php
+cinetpay/exemple/script.sql
+cinetpay/LICENSE
+cinetpay/README.md
+cinetpay/src/cinetpay.php
+cinetpay/exemple/README.md

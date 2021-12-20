@@ -37,7 +37,7 @@ if(!empty($_POST['nom']) && !empty($_POST['pren']) && !empty($_POST['tel']) && !
         if ($res_u == 0) { 
             if(strlen($nom) <= 100){ // On verifie que la longueur du nom <= 100
                 if(strlen($pren) <= 100){
-                    if(preg_match("#[0][1]|[0][5]|[0][7][- \.?]?([0-9][0-9][- \.?]?){4}$#", $tel)){
+                    //if(preg_match("#[0][1]|[0][5]|[0][7][- \.?]?([0-9][0-9][- \.?]?){4}$#", $tel)){
                         if(strlen($email) <= 100){ // On verifie que la longueur du mail <= 100
                             if(filter_var($email, FILTER_VALIDATE_EMAIL)){ // Si l'email est de la bonne forme
                                 if ($password === $password_retype) {
@@ -57,7 +57,7 @@ if(!empty($_POST['nom']) && !empty($_POST['pren']) && !empty($_POST['tel']) && !
                             header('Location:connexionClient.php');die();}
                         } else {header('Location: infocl.php?reg_err=password');die();}
                         }else{ header('Location: infocl.php?reg_err=email_length'); die();}
-                    }else{ header('Location: infocl.php?reg_err=tel_length'); die();}
+                    //}else{ header('Location: infocl.php?reg_err=tel_length'); die();}
                 }else{ header('Location: infocl.php?reg_err=pren_length'); die();}
             }else{ header('Location: infocl.php?reg_err=nom_length'); die();}
         }else{header('Location:infocl.php?reg_err=already');die();}//il existe déjà

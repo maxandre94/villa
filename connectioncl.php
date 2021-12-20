@@ -109,7 +109,7 @@ session_start();
                                         <div class="menu-list hidden-sm hidden-xs">
                                             <nav>
                                                 <ul>
-                                                    <li><a href="our-room.html">Chambres</a></li>
+                                                    <li><a href="chambres.html">Chambres</a></li>
                                                     <li><a href="seminaires.html">Séminaires</a></li>
                                                     <li><a href="resto.html">Restaurant</a></li>
                                                     <li><a href="loisirs.html">Nos loisirs</a></li>
@@ -130,7 +130,7 @@ session_start();
                         <div class="col-md-12">
                             <nav id="dropdown">
                                 <ul>
-                                    <li><a href="our-room.html">Chambres</a></li>
+                                    <li><a href="chambres.html">Chambres</a></li>
                                     <li><a href="seminaires.html">Séminaires</a></li>
                                     <li><a href="resto.html">Restaurant</a></li>
                                     <li><a href="loisirs.html">Nos loisirs</a></li>

@@ -1,17 +1,114 @@
 <?php
 session_start();
-//require_once './connection.php';
 if (isset($_SESSION['resa'])) $_resa = $_SESSION['resa'];
 else $_resa = array();
-//print_r($_resa);
-
+require_once './connection.php';
 require_once './admin/config.php';
-//if (!isset($_SESSION['utilisateur'])) {
-//header('Location:detail.php');
-//die();
-//}
+
+function ResaSpitPeriod($date_debut, $date_fin)
+{
+    $weekends = array("FRIDAY", "SATURDAY");
+    $jour_sem = 0;
+    $jour_week = 0;
+    $resultDays = array(
+        'Monday' => 0,
+        'Tuesday' => 0,
+        'Wednesday' => 0,
+        'Thursday' => 0,
+        'Friday' => 0,
+        'Saturday' => 0,
+        'Sunday' => 0
+    );
+
+    // change string en date time object 
+    $date_debut = new DateTime($date_debut);
+    $date_fin = new DateTime($date_fin);
+    $date_fin->modify('-1 day');
+
+    // iterate over start to end date 
+    while ($date_debut <= $date_fin) {
+        // find the timestamp value of start date 
+        $timestamp = strtotime($date_debut->format('d-m-Y'));
+        // find out the day for timestamp and increase particular day 
+        $Day = date('l', $timestamp);
+        if (in_array(strtoupper($Day), $weekends)) $jour_week++;
+        else $jour_sem++;
+        //$resultDays[$weekDay] = $resultDays[$weekDay] + 1; 
+        // increase startDate by 1 
+        $date_debut->modify('+1 day');
+    }
+    // print the result 
+    $jours = array($jour_week, $jour_sem);
+    return $jours;
+}
+
+function dateWeek($date_debut, $date_fin)
+{
+    $resultDays = array(
+        'Monday' => 0,
+        'Tuesday' => 0,
+        'Wednesday' => 0,
+        'Thursday' => 0,
+        'Friday' => 0,
+        'Saturday' => 0,
+        'Sunday' => 0
+    );
+
+    // change string en date time object 
+    $date_debut = new DateTime($date_debut);
+    $date_fin = new DateTime($date_fin);
+
+    // iterate over start to end date 
+    while ($date_debut <= $date_fin) {
+        // find the timestamp value of start date 
+        $timestamp = strtotime($date_debut->format('d-m-Y'));
+        // find out the day for timestamp and increase particular day 
+        $weekDay = date('l', $timestamp);
+        $resultDays[$weekDay] = $resultDays[$weekDay] + 1;
+        // increase startDate by 1 
+        $date_debut->modify('+1 day');
+    }
+    // print the result 
+    //print_r($resultDays); 
+    $totaldays = 0;
+    foreach ($resultDays as $key => $value) {
+        if ($key == "Friday")
+            $totaldays += $value;
+        if ($key == "Saturday")
+            $totaldays += $value;
+    }
+    return $totaldays;
+}
+
+
+function jourTotal($date_debut, $date_fin)
+{
+    // calulating the difference in timestamps 
+    $diff = strtotime($date_debut) - strtotime($date_fin);
+
+    // 1 day = 24 hours 
+    // 24 * 60 * 60 = 86400 seconds
+    return ceil(abs($diff / 86400));
+}
+
+
+// PHP code to find the number of days
+// between two given dates
+
+// Function to find the difference 
+// between two dates.
+function dateDiffInDays($date1, $date2)
+{
+    // Calculating the difference in timestamps
+    $diff = strtotime($date2) - strtotime($date1);
+
+    // 1 day = 24 hours
+    // 24 * 60 * 60 = 86400 seconds
+    return abs(round($diff / 86400));
+}
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -109,7 +206,7 @@ require_once './admin/config.php';
                                     <div class="header-top ptb-10">
                                         <div class="adresses">
                                             <div class="phone">
-                                                <p>Téléphone : <span>+225 07 07 43 43 94</span></p>
+                                                <p>Phone: <span>+225 07 07 43 43 94</span></p>
                                             </div>
                                             <div class="email">
                                                 <p>Email: <span>reservation@villa_blanca.ci</span></p>
@@ -120,11 +217,11 @@ require_once './admin/config.php';
                                         <div class="menu-list hidden-sm hidden-xs">
                                             <nav>
                                                 <ul>
-                                                    <li><a href="chambres.html">Chambres</a></li>
-                                                    <li><a href="seminaires.html">Séminaires</a></li>
-                                                    <li><a href="resto.html">Restaurant</a></li>
-                                                    <li><a href="loisirs.html">Nos loisirs</a></li>
-                                                    <li><a href="detail.php" class="btn btn-danger">Reservation</a></li>
+                                                <li><a href="chambres.php">ROOMS</a></li>
+                                                    <li><a href="seminaires.php">SEMINARS</a></li>
+                                                    <li><a href="resto.php">RESTAURANT</a></li>
+                                                    <li><a href="loisirs.php">HOBBIES</a></li>
+                                                    <li><a href="detailang.php" class="btn btn-danger">RESERVATION</a></li>
                                                     <?php if (isset($_SESSION['utilisateur'])) {
                                                         $req = $bdd->prepare('SELECT * FROM facture WHERE id_cl=?');
                                                         $req->execute(array($_SESSION['utilisateur']));
@@ -153,9 +250,10 @@ require_once './admin/config.php';
                                                             background: green;">' . $row . '</span></a></li>';
                                                         }
                                                     } else {
-                                                        echo '<li><a href="connexionClient.php">Connexion</a></li>';
+                                                        echo '<li><a href="connexionClient.php">Connection</a></li>';
                                                     }
                                                     ?>
+
                                                 </ul>
                                             </nav>
                                         </div>
@@ -171,10 +269,10 @@ require_once './admin/config.php';
                         <div class="col-md-12">
                             <nav id="dropdown">
                                 <ul>
-                                    <li><a href="chambres.html">Chambres</a></li>
-                                    <li><a href="seminaires.html">Séminaires</a></li>
-                                    <li><a href="resto.html">Restaurant</a></li>
-                                    <li><a href="loisirs.html">Nos loisirs</a></li>
+                                    <li><a href="chambres.php">ROOMS</a></li>
+                                    <li><a href="seminaires.php">SEMINARS</a></li>
+                                    <li><a href="resto.php">RESTAURANT</a></li>
+                                    <li><a href="loisirs.php">HOBBIES</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -189,7 +287,7 @@ require_once './admin/config.php';
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="breadcurbs-inner">
                                 <div class="breadcrubs">
-                                    <h2>Réservations</h2>
+                                    <h2>RESERVATION</h2>
                                 </div>
                             </div>
                         </div>
@@ -229,7 +327,7 @@ require_once './admin/config.php';
                     <div class="col-md-12">
                         <div class="section-title mb-50">
                             <h2>
-                                <h1 style="font-family: 'Reggae One', cursive;">Réservez vos chambres</h1>
+                                <h1 style="font-family: 'Reggae One', cursive;">Reserve your rooms</h1>
                             </h2>
                         </div>
                     </div>
@@ -242,161 +340,157 @@ require_once './admin/config.php';
                         <div class="col-md-12">
                             <div class="booking-rooms-tab text-left">
                                 <ul class="nav" role="tablist">
-                                    <li><a href="/villa/detail.php" data-toggle="tab"><span class="tab-border">1</span><span>Infos chambres</span></a></li>
-                                    <li><a href="/villa/detail-facture.php" data-toggle="tab"><span class="tab-border">2</span><span>Détails facture</span></a>
+                                    <li><a href="/villa/detailang.php" data-toggle="tab" name="section1"><span class="tab-border">1</span><span>Rooms infos</span></a></li>
+                                    <li class="active"><a href="/villa/detail-factureang.php" data-toggle="tab" name="section2"><span class="tab-border">2</span><span>Invoice details</span></a>
                                     </li>
-                                    <li class="active"><a href="/villa/infocl.php" data-toggle="tab" name="section3"><span class="tab-border">3</span><span>Infos
-                                                client(s)</span></a>
+                                    <li><a href="/villa/infocl.php" data-toggle="tab"><span class="tab-border">3</span><span>Customer(s) Info</span></a>
                                     </li>
-                                    <li><a href="#payment" data-toggle="tab"><span class="tab-border">4</span><span>règlement</span></a>
+                                    <li><a href="#payment" data-toggle="tab"><span class="tab-border">4</span><span>Regulation</span></a>
                                     </li>
 
                                 </ul>
                             </div>
 
                             <br /><br /><br />
-                            <hr>
                             <!-- FIN en tête -->
 
 
-                            <div class="login-form">
+                            <div id="table_resa">
                                 <?php
-                                if (isset($_GET['reg_err'])) {
-                                    $err = htmlspecialchars($_GET['reg_err']);
+                                $html = '<table class="table table-bordered">
+<caption>Détail de votre réservation (Fcfa)</caption>
+<tbody>
+  <tr>
+    <td rowspan="2" style="font-weight: bold">Arrivée</td>
+    <td rowspan="2" style="font-weight: bold">Depart</td>
+    <td rowspan="2" style="font-weight: bold">Nb. personne</td>
+    <td rowspan="2" style="font-weight: bold">Type chambre</td>
+    <td align="center" colspan="4" style="font-weight: bold" bgcolor="f1f1f1">Semaine</td>
+    <td align="center" colspan="4" style="font-weight: bold" bgcolor="44c5f8">Weekend</td>
+    <td rowspan="2" style="font-weight: bold">Montant</td>
+  </tr>
+<tr>
+    <td style="font-weight: bold" bgcolor="f1f1f1">Nb. chambre</td>
+    <td style="font-weight: bold" bgcolor="f1f1f1">Nuitée</td>
+    <td style="font-weight: bold" bgcolor="f1f1f1">Tarif</td>
+    <td style="font-weight: bold" bgcolor="f1f1f1">Montant</td>
+    <td style="font-weight: bold" bgcolor="44c5f8">Nb. chambre</td>
+    <td style="font-weight: bold" bgcolor="44c5f8">Nuitée</td>
+    <td style="font-weight: bold" bgcolor="44c5f8">Tarif</td>
+    <td style="font-weight: bold" bgcolor="44c5f8">Montant</td>
+  </tr>';
+                                $nuite = 0;
+                                $pers = 0;
+                                $p_sem = 0;
+                                $p_week = 0;
+                                $total_resa = 0;
+                                $sem = 0;
+                                $week = 0;
 
-                                    switch ($err) {
-
-                                        /*case 'tel_length':
-                                ?>
-                                            <div class="alert alert-danger">
-                                                <strong>Erreur</strong> numéro incorrect. EX: 0102030405
-                                            </div>
-                                        <?php
-                                            break;*/
-
-                                        case 'pren_length':
-                                        ?>
-                                            <div class="alert alert-danger">
-                                                <strong>Erreur</strong> prénom trop long.
-                                            </div>
-                                        <?php
-                                            break;
-
-                                        case 'password':
-                                        ?>
-                                            <div class="alert alert-danger">
-                                                <strong>Erreur</strong> mot de passe différent.
-                                            </div>
-                                        <?php
-                                            break;
-
-                                        case 'already':
-                                        ?>
-                                            <div class="alert alert-danger">
-                                                <strong>Erreur</strong> compte deja existant. Veuillez vous connecter.
-                                            </div>
-                                        <?php
-                                            break;
-
-                                        case 'email_length':
-                                        ?>
-                                            <div class="alert alert-danger">
-                                                <strong>Erreur</strong> email trop long.
-                                            </div>
-                                        <?php
-                                            break;
-
-                                        case 'nom_length':
-                                        ?>
-                                            <div class="alert alert-danger">
-                                                <strong>Erreur</strong> nom trop long.
-                                            </div>
-                                <?php
-
+                                foreach ($_resa as $elements => $element) {
+                                    $jour = ResaSpitPeriod($element['arrive'], $element['depart']);
+                                    //$date_sem=dateSem($element['arrive'],$element['depart']);
+                                    //$date_week=dateWeek($element['arrive'],$element['depart']);
+                                    $date_sem = $jour[1];
+                                    $date_week = $jour[0];
+                                    $nuite += (dateDiffInDays($element['arrive'], $element['depart']) + 1);
+                                    $pers += $element['pers_nb'];
+                                    $total_resa += ($date_sem * $element['chb_sem'] + $date_week * $element['chb_week']) * $element['chb_nb'];
+                                    if ($date_sem == 0) {
+                                        $html .= '
+                    <tr>
+                    <td>' . date("d/m/Y", strtotime($element['arrive'])) . '</td>
+                    <td>' . date("d/m/Y", strtotime($element['depart'])) . '</td>
+                    <td>' . $element['pers_nb'] . '</td>
+                    <td>' . $element['chb_nom'] . '</td>
+                    <td bgcolor="f1f1f1"></td>
+                    <td bgcolor="f1f1f1"></td>
+                    <td bgcolor="f1f1f1"></td>
+                    <td bgcolor="f1f1f1"></td>
+                    <td bgcolor="44c5f8">' . $element['chb_nb'] . '</td>
+                    <td bgcolor="44c5f8">' . $date_week . '</td>
+                    <td bgcolor="44c5f8">' . number_format($element['chb_week'], 0, ',', ' ') . '</td>
+                    <td bgcolor="44c5f8">' . number_format($date_week * $element['chb_week'] * $element['chb_nb'], 0, ',', ' ') . '</td>
+                    <td>' . number_format((($date_sem * $element['chb_sem'] + $date_week * $element['chb_week']) * $element['chb_nb']), 0, ',', ' ') . '</td>
+                    </tr>';
+                                    } elseif ($date_week == 0) {
+                                        $html .= '
+                    <tr>
+                    <td>' . date("d/m/Y", strtotime($element['arrive'])) . '</td>
+                    <td>' . date("d/m/Y", strtotime($element['depart'])) . '</td>
+                    <td>' . $element['pers_nb'] . '</td>
+                    <td>' . $element['chb_nom'] . '</td>
+                    <td bgcolor="f1f1f1">' . $element['chb_nb'] . '</td>
+                    <td bgcolor="f1f1f1">' . $date_sem . '</td>
+                    <td bgcolor="f1f1f1">' . number_format($element['chb_sem'], 0, ',', ' ') . '</td>
+                    <td bgcolor="f1f1f1">' . number_format($date_sem * $element['chb_sem'] * $element['chb_nb'], 0, ',', ' ') . '</td>
+                    <td bgcolor="44c5f8"></td>
+                    <td bgcolor="44c5f8"></td>
+                    <td bgcolor="44c5f8"></td>
+                    <td bgcolor="44c5f8"></td>
+                    <td>' . number_format((($date_sem * $element['chb_sem'] + $date_week * $element['chb_week']) * $element['chb_nb']), 0, ',', ' ') . '</td>
+                    </tr>';
+                                    } else {
+                                        $html .= '
+                    <tr>
+                    <td>' . date("d/m/Y", strtotime($element['arrive'])) . '</td>
+                    <td>' . date("d/m/Y", strtotime($element['depart'])) . '</td>
+                    <td>' . $element['pers_nb'] . '</td>
+                    <td>' . $element['chb_nom'] . '</td>
+                    <td bgcolor="f1f1f1">' . $element['chb_nb'] . '</td>
+                    <td bgcolor="f1f1f1">' . $date_sem . '</td>
+                    <td bgcolor="f1f1f1">' . number_format($element['chb_sem'], 0, ',', ' ') . '</td>
+                    <td bgcolor="f1f1f1">' . number_format($date_sem * $element['chb_sem'] * $element['chb_nb'], 0, ',', ' ') . '</td>
+                    <td bgcolor="44c5f8">' . $element['chb_nb'] . '</td>
+                    <td bgcolor="44c5f8">' . $date_week . '</td>
+                    <td bgcolor="44c5f8">' . number_format($element['chb_week'], 0, ',', ' ') . '</td>
+                    <td bgcolor="44c5f8">' . number_format($date_week * $element['chb_week'] * $element['chb_nb'], 0, ',', ' ') . '</td>
+                    <td>' . number_format((($date_sem * $element['chb_sem'] + $date_week * $element['chb_week']) * $element['chb_nb']), 0, ',', ' ') . '</td>
+                    </tr>';
                                     }
                                 }
+
+                                $html .= '</tbody>
+<tfoot>
+<td colspan="12" style="font-weight: bold">Nuitee(s) : ' . $nuite . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Nombre de
+client(s) : ' . $pers . '<span style="margin-left: 150px;"> Total</span></td>
+                                <td style="font-weight: bold">' . number_format($total_resa, 0, ',', ' ') . '</td>
+                                </tfoot>
+                                </table>';
+
+                                echo $html;
+
                                 ?>
-
-                                <form method="post" action="infotraitement.php">
-                                    <h2 class="text-center">Inscription</h2>
-                                    <div class="form-group">
-                                        <select class="form-control" id="chb_type" name="civilite">
-                                            <option value="Mr">Monsieur</option>
-                                            <option value="Mme">Madame</option>
-                                            <option value="Mlle">Mademoiselle</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" name="nom" class="form-control" placeholder="Nom" required="required" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" name="pren" class="form-control" placeholder="Prénom" required="required" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" name="tel" class="form-control" placeholder="Contact" required="required" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="email" name="email" class="form-control" placeholder="Email" required="required" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="password" name="password" class="form-control" placeholder="Mot de passe" required="required" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="password" name="password_retype" class="form-control" placeholder="Re-tapez le mot de passe" required="required" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="submit" class="btn btn-primary btn-lg" name="ok" value="Inscription" />
-                                    </div>
-                                </form>
                             </div>
-                        </div>
-                        Avez-vous un compte ? <a href="infoclConnexion.php#section3"> Connectez-vous </a>
-                    </div>
-                    <style>
-                        .login-form {
-                            width: 340px;
-                            margin: 50px auto;
-                        }
+                            <?php
 
-                        .login-form form {
-                            margin-bottom: 15px;
-                            background: #f7f7f7;
-                            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-                            padding: 30px;
-                        }
+                            ?>
 
-                        .login-form h2 {
-                            margin: 0 0 15px;
-                        }
 
-                        .form-control,
-                        .btn {
-                            min-height: 38px;
-                            border-radius: 2px;
-                        }
+                            <br>
+                            <center>
+                                <?php if (isset($_SESSION['utilisateur'])) {
+                                    echo '<form action="enregisteDetailFact.php" method="post" id="formulaire" name="formulaire"><input type="submit" class="btn btn-primary" style="width:160px;height: 34px;" name="reserver" value="Réserver"></form>';
+                                } else {
+                                    echo '<a href="infocl.php#section3"><button type="submit" class="btn btn-primary"
+                                            style="width:160px;height: 34px;" name="save" id="save">Étape
+                                            suivante</button></a>';
+                                } ?>
 
-                        .btn {
-                            font-size: 15px;
-                            font-weight: bold;
-                        }
-                    </style>
+                            </center>
 
 
 
 
 
 
-
-
-
-                    <!-- debut bas -->
-                    <div class="our-sevices text-center ptb-80 white_bg">
+                            <!-- debut bas -->
+                            <div class="our-sevices text-center ptb-80 white_bg">
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="section-title mb-75"><br><br><br><br>
-                                        <h2>Situation <span style="color: rgb(226, 29, 29);">Geographique</span>
-                                        </h2>
+                                        <h2><span style="color: rgb(226, 29, 29);">Geographic</span> location</h2>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -419,27 +513,27 @@ require_once './admin/config.php';
                                         </div>
                                         <div class="f-adress">
                                             <p>
-                                                Route Assinie-Mafia, KM 12
+                                            Road Assinie-Mafia, KM 12
                                                 Assinie
                                                 Côte d'Ivoire
                                             </p>
 
                                         </div>
                                         <div class="hotel-contact">
-                                            <p><span>Téléphone:</span> +225 07 07 43 43 94.</p>
+                                            <p><span>Phone:</span> +225 07 07 43 43 94.</p>
                                             <p><span>Email:</span> reservation@villa_blanca.ci</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3 hidden-sm col-xs-6">
                                     <div class="single-footer">
-                                        <h3>Plus d'infos</h3>
+                                        <h3>More informations</h3>
                                         <div class="quick-item">
                                             <ul>
-                                                <li><a href="#">Equipement de l'hotel</a></li>
-                                                <li><a href="#">Menu du Restaurant</a></li>
+                                                <li><a href="#">Hotel equipment</a></li>
+                                                <li><a href="#">Restaurant menu</a></li>
                                                 <li><a href="#">Bar</a></li>
-                                                <li><a href="#">loisirs</a></li>
+                                                <li><a href="#">Hobbies</a></li>
                                                 <!--<li><a href="#">Wellness</a></li>-->
                                                 <!--<li><a href="#">Contact</a></li>-->
                                             </ul>
@@ -448,17 +542,17 @@ require_once './admin/config.php';
                                 </div>
                                 <div class="col-md-3 col-sm-4 col-xs-6">
                                     <div class="single-footer">
-                                        <h3>Nous contacter</h3>
+                                        <h3>Contact us</h3>
                                         <div class="get-touch">
                                             <!--<<p>There are many varins of passages of Lorem Ipsum available, but</p>-->
                                             <div class="get-conatct">
                                                 <form action="#">
-                                                    <input type="text" placeholder="Votre nom">
-                                                    <input type="text" placeholder="Votre Email">
+                                                    <input type="text" placeholder="Your name">
+                                                    <input type="text" placeholder="Your email">
                                                     <div class="form-group">
-                                                        <textarea class="form-control" id="exampleInput" style="color: white;" placeholder="votre message" rows="3"></textarea>
+                                                        <textarea class="form-control" id="exampleInput" style="color: white;" placeholder="Your message" rows="3"></textarea>
                                                     </div>
-                                                    <button type="submit">Envoyer</button>
+                                                    <button type="submit">Send</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -466,7 +560,7 @@ require_once './admin/config.php';
                                 </div>
                                 <div class="col-md-3 col-sm-4 col-xs-6">
                                     <div class="single-footer">
-                                        <h3>Suivez-nous</h3>
+                                        <h3>Follow us</h3>
                                         <div class="instagram-post">
                                             <div class="single-post">
                                                 <i class="fa fa-twitter fa-3x" style="color: #1DA1F2;" aria-hidden="true"></i>

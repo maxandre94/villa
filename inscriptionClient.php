@@ -114,7 +114,7 @@ else $_resa=array();
                                         <div class="menu-list hidden-sm hidden-xs">
                                             <nav>
                                                 <ul>
-                                                    <li><a href="our-room.html">Chambres</a></li>
+                                                    <li><a href="chambres.html">Chambres</a></li>
                                                     <li><a href="seminaires.html">Séminaires</a></li>
                                                     <li><a href="resto.html">Restaurant</a></li>
                                                     <li><a href="loisirs.html">Nos loisirs</a></li>
@@ -168,7 +168,7 @@ else $_resa=array();
                         <div class="col-md-12">
                             <nav id="dropdown">
                                 <ul>
-                                    <li><a href="our-room.html">Chambres</a></li>
+                                    <li><a href="chambres.html">Chambres</a></li>
                                     <li><a href="seminaires.html">Séminaires</a></li>
                                     <li><a href="resto.html">Restaurant</a></li>
                                     <li><a href="loisirs.html">Nos loisirs</a></li>
@@ -226,13 +226,13 @@ else $_resa=array();
                     switch($err)
                     {
 
-                        case 'tel_length':
+                        /*case 'tel_length':
                         ?>
                                 <div class="alert alert-danger">
                                     <strong>Erreur</strong> numéro incorrect. EX: 0102030405
                                 </div>
                                 <?php
-                        break;
+                        break;*/
 
                         case 'pren_length':
                         ?>
