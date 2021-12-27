@@ -29,21 +29,21 @@ if (!empty($_POST['email']) && !empty($_POST['password'])) // Si il existe les c
 
                 $_SESSION['utilisateur'] = $data['id_cl'];
                 unset($_SESSION['resa']);
-                header('Location: detail.php');
+                header('Location: detailang.php');
                 die();
             } else {
-                header('Location: connexionClient.php?login_err=password');
+                header('Location: connexionClientang.php?login_err=password');
                 die();
             }
         } else {
-            header('Location: connexionClient.php?login_err=email');
+            header('Location: connexionClientang.php?login_err=email');
             die();
         }
     } else {
-        header('Location: connexionClient.php?login_err=already');
+        header('Location: connexionClientang.php?login_err=already');
         die();
     }
 } else {
-    header('Location: connexionClient.php');
+    header('Location: connexionClientang.php');
     die();
 } // si le formulaire est envoyé sans aucune données

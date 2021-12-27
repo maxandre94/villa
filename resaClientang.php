@@ -1,117 +1,31 @@
 <?php
 session_start();
-if (isset($_SESSION['resa'])) $_resa = $_SESSION['resa'];
-else $_resa = array();
-require_once './connection.php';
 require_once './admin/config.php';
-
-function ResaSpitPeriod($date_debut, $date_fin)
-{
-    $weekends = array("FRIDAY", "SATURDAY");
-    $jour_sem = 0;
-    $jour_week = 0;
-    $resultDays = array(
-        'Monday' => 0,
-        'Tuesday' => 0,
-        'Wednesday' => 0,
-        'Thursday' => 0,
-        'Friday' => 0,
-        'Saturday' => 0,
-        'Sunday' => 0
-    );
-
-    // change string en date time object 
-    $date_debut = new DateTime($date_debut);
-    $date_fin = new DateTime($date_fin);
-    $date_fin->modify('-1 day');
-
-    // iterate over start to end date 
-    while ($date_debut <= $date_fin) {
-        // find the timestamp value of start date 
-        $timestamp = strtotime($date_debut->format('d-m-Y'));
-        // find out the day for timestamp and increase particular day 
-        $Day = date('l', $timestamp);
-        if (in_array(strtoupper($Day), $weekends)) $jour_week++;
-        else $jour_sem++;
-        //$resultDays[$weekDay] = $resultDays[$weekDay] + 1; 
-        // increase startDate by 1 
-        $date_debut->modify('+1 day');
-    }
-    // print the result 
-    $jours = array($jour_week, $jour_sem);
-    return $jours;
+if (!isset($_SESSION['utilisateur'])) {
+    header('Location:detail.php');
+    die();
 }
 
-function dateWeek($date_debut, $date_fin)
-{
-    $resultDays = array(
-        'Monday' => 0,
-        'Tuesday' => 0,
-        'Wednesday' => 0,
-        'Thursday' => 0,
-        'Friday' => 0,
-        'Saturday' => 0,
-        'Sunday' => 0
-    );
+$id_cl = $_SESSION['utilisateur'];
 
-    // change string en date time object 
-    $date_debut = new DateTime($date_debut);
-    $date_fin = new DateTime($date_fin);
+$req = $bdd->prepare('SELECT * FROM client WHERE id_cl=?');
+$req->execute(array($id_cl));
+$client = $req->fetch();
 
-    // iterate over start to end date 
-    while ($date_debut <= $date_fin) {
-        // find the timestamp value of start date 
-        $timestamp = strtotime($date_debut->format('d-m-Y'));
-        // find out the day for timestamp and increase particular day 
-        $weekDay = date('l', $timestamp);
-        $resultDays[$weekDay] = $resultDays[$weekDay] + 1;
-        // increase startDate by 1 
-        $date_debut->modify('+1 day');
-    }
-    // print the result 
-    //print_r($resultDays); 
-    $totaldays = 0;
-    foreach ($resultDays as $key => $value) {
-        if ($key == "Friday")
-            $totaldays += $value;
-        if ($key == "Saturday")
-            $totaldays += $value;
-    }
-    return $totaldays;
-}
+$nom = $client['nom_cl'];
+$civilite = $client['civilite_cl'];
 
 
-function jourTotal($date_debut, $date_fin)
-{
-    // calulating the difference in timestamps 
-    $diff = strtotime($date_debut) - strtotime($date_fin);
-
-    // 1 day = 24 hours 
-    // 24 * 60 * 60 = 86400 seconds
-    return ceil(abs($diff / 86400));
-}
+$req = $bdd->prepare('SELECT * FROM facture WHERE id_cl=? AND statut IN (0,1) ORDER BY date_fact DESC, paye ASC');
+$req->execute(array($id_cl));
+$factures = $req->fetchAll();
 
 
-// PHP code to find the number of days
-// between two given dates
-
-// Function to find the difference 
-// between two dates.
-function dateDiffInDays($date1, $date2)
-{
-    // Calculating the difference in timestamps
-    $diff = strtotime($date2) - strtotime($date1);
-
-    // 1 day = 24 hours
-    // 24 * 60 * 60 = 86400 seconds
-    return abs(round($diff / 86400));
-}
 
 ?>
 
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="utf-8">
@@ -199,7 +113,7 @@ function dateDiffInDays($date1, $date2)
                             <div class="row">
                                 <div class="col-md-2 col-sm-2 col-xs-12">
                                     <div class="logo mt-15">
-                                        <a href="index.php"><img src="images/logo/logo.png" alt=""></a>
+                                        <a href="indexang.php"><img src="images/logo/logo.png" alt=""></a>
                                     </div>
                                 </div>
                                 <div class="col-md-10 col-sm-10 hidden-xs">
@@ -211,13 +125,17 @@ function dateDiffInDays($date1, $date2)
                                             <div class="email">
                                                 <p>Email: <span>reservation@villa_blanca.ci</span></p>
                                             </div>
+                                            <!--<div style="position: absolute;top: 60px;right: 67px;">
+                                                <a href="deconnexionClient.php"><input class="btn btn-danger"
+                                                        type="submit" name="deconnexion" value="Déconnexion"></a>
+                                            </div>-->
                                         </div>
                                     </div>
                                     <div class="menu mt-25">
                                         <div class="menu-list hidden-sm hidden-xs">
                                             <nav>
                                                 <ul>
-                                                <li><a href="chambres.php">ROOMS</a></li>
+                                                
                                                     <li><a href="seminaires.php">SEMINARS</a></li>
                                                     <li><a href="resto.php">RESTAURANT</a></li>
                                                     <li><a href="loisirs.php">HOBBIES</a></li>
@@ -237,27 +155,26 @@ function dateDiffInDays($date1, $date2)
                                                             }
                                                         }
                                                         if ($row == 0 && $rowN != 0) {
-                                                            echo '<li><a href="resaClientang.php"><span style="border-radius: 30px;
-                                                            background: red;">' . $rowN . '</span> My reservations </a></li>';
+                                                            echo '<li><span style="border-radius: 30px;
+                                                                background: red; color: white">' . $rowN . '</span>&nbsp<a href="resaClientang.php" class="btn btn-danger">My reservations</a></li>';
                                                         }
                                                         if ($row != 0 && $rowN == 0) {
-                                                            echo '<li><a href="resaClientang.php"> My reservations <span style="border-radius: 30px;
-                                                                background: green;">' . $row . '</span></a></li>';
+                                                            echo '<li><a href="resaClientang.php" class="btn btn-danger">My reservations</a>&nbsp<span style="border-radius: 30px;
+                                                                background: green; color: white">' . $row . '</span></li>';
                                                         }
                                                         if ($row != 0 && $rowN != 0) {
-                                                            echo '<li><a href="resaClientang.php"><span style="border-radius: 30px;
-                                                            background: red;">' . $rowN . '</span> My reservations <span style="border-radius: 30px;
-                                                            background: green;">' . $row . '</span></a></li>';
+                                                            echo '<li><span style="border-radius: 30px;
+                                                                background: red; color: white">' . $rowN . '</span>&nbsp<a href="resaClientang.php" class="btn btn-danger">My reservations</a>&nbsp<span style="border-radius: 30px;
+                                                                background: green; color: white">' . $row . '</span></li>';
                                                         }
-                                                    } else {
-                                                        echo '<li><a href="connexionClientang.php">Connection</a></li>';
                                                     }
                                                     ?>
-
+                                                    <li><a href="deconnexionClientang.php">Logout</a></li>
                                                 </ul>
                                             </nav>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -287,7 +204,7 @@ function dateDiffInDays($date1, $date2)
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="breadcurbs-inner">
                                 <div class="breadcrubs">
-                                    <h2>RESERVATION</h2>
+                                    <h2>HELLO <?php echo $civilite . " " . $nom; ?></h2>
                                 </div>
                             </div>
                         </div>
@@ -319,172 +236,94 @@ function dateDiffInDays($date1, $date2)
                 </div>
             </div>
         </div>
-        <!-- search bar End -->
-        <!--Element start-->
+        <!-- FIN en tête -->
+
+
+
+
+
+
+
+
+
+
         <div class="elements pt-80 text-center white_bg">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="section-title mb-50">
                             <h2>
-                                <h1 style="font-family: 'Reggae One', cursive;">Reserve your rooms</h1>
+                                <h1 style="font-family: 'Reggae One', cursive;">Invoices</h1>
                             </h2>
                         </div>
                     </div>
                 </div>
             </div>
-            <!--Room booking start-->
-            <div class="room-booking pb-80 white_bg">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="booking-rooms-tab text-left">
-                                <ul class="nav" role="tablist">
-                                    <li><a href="/villa/detailang.php" data-toggle="tab" name="section1"><span class="tab-border">1</span><span>Rooms infos</span></a></li>
-                                    <li class="active"><a href="/villa/detail-factureang.php" data-toggle="tab" name="section2"><span class="tab-border">2</span><span>Invoice details</span></a>
-                                    </li>
-                                    <li><a href="/villa/infoclang.php" data-toggle="tab"><span class="tab-border">3</span><span>Customer(s) Info</span></a>
-                                    </li>
-                                    <li><a href="#payment" data-toggle="tab"><span class="tab-border">4</span><span>Regulation</span></a>
-                                    </li>
-
-                                </ul>
-                            </div>
-
-                            <br /><br /><br />
-                            <!-- FIN en tête -->
-
-
-                            <div id="table_resa">
-                                <?php
-                                $html = '<table class="table table-bordered">
-<caption>Detail of your reservation (XAF)</caption>
-<tbody>
-  <tr>
-    <td rowspan="2" style="font-weight: bold">Arrival</td>
-    <td rowspan="2" style="font-weight: bold">Departure</td>
-    <td rowspan="2" style="font-weight: bold">N. people</td>
-    <td rowspan="2" style="font-weight: bold">Room type</td>
-    <td align="center" colspan="4" style="font-weight: bold" bgcolor="f1f1f1">Week</td>
-    <td align="center" colspan="4" style="font-weight: bold" bgcolor="44c5f8">Weekend</td>
-    <td rowspan="2" style="font-weight: bold">Amount</td>
-  </tr>
+            <div id="table_cl" style="margin:10px 190px 0px 0px">
+                <?php
+                $html = '<table class="table table-bordered" style="margin:10px 150px 10px 110px">
+<thead>
 <tr>
-    <td style="font-weight: bold" bgcolor="f1f1f1">Room n.</td>
-    <td style="font-weight: bold" bgcolor="f1f1f1">Day</td>
-    <td style="font-weight: bold" bgcolor="f1f1f1">Rate</td>
-    <td style="font-weight: bold" bgcolor="f1f1f1">Amount</td>
-    <td style="font-weight: bold" bgcolor="44c5f8">Room n.</td>
-    <td style="font-weight: bold" bgcolor="44c5f8">Day</td>
-    <td style="font-weight: bold" bgcolor="44c5f8">Rate</td>
-    <td style="font-weight: bold" bgcolor="44c5f8">Amount</td>
-  </tr>';
-                                $nuite = 0;
-                                $pers = 0;
-                                $p_sem = 0;
-                                $p_week = 0;
-                                $total_resa = 0;
-                                $sem = 0;
-                                $week = 0;
+<th scope="col" style="font-weight: bold; text-align: center;">Invoice n°</th>
+<th scope="col" style="font-weight: bold; text-align: center;">Date of invoice</th>
+<th scope="col" style="font-weight: bold; text-align: center;">Invoice amount</th>
+<th scope="col" style="font-weight: bold; text-align: center;">Invoice status</th>
+<th scope="col" style="font-weight: bold; text-align: center;">state</th>
+<th scope="col" style="font-weight: bold; text-align: center;"></th>
+</tr>
+</thead>
+<tbody>';
 
-                                foreach ($_resa as $elements => $element) {
-                                    $jour = ResaSpitPeriod($element['arrive'], $element['depart']);
-                                    //$date_sem=dateSem($element['arrive'],$element['depart']);
-                                    //$date_week=dateWeek($element['arrive'],$element['depart']);
-                                    $date_sem = $jour[1];
-                                    $date_week = $jour[0];
-                                    $nuite += (dateDiffInDays($element['arrive'], $element['depart']) + 1);
-                                    $pers += $element['pers_nb'];
-                                    $total_resa += ($date_sem * $element['chb_sem'] + $date_week * $element['chb_week']) * $element['chb_nb'];
-                                    if ($date_sem == 0) {
-                                        $html .= '
-                    <tr>
-                    <td>' . date("d/m/Y", strtotime($element['arrive'])) . '</td>
-                    <td>' . date("d/m/Y", strtotime($element['depart'])) . '</td>
-                    <td>' . $element['pers_nb'] . '</td>
-                    <td>' . $element['chb_nom_ang'] . '</td>
-                    <td bgcolor="f1f1f1"></td>
-                    <td bgcolor="f1f1f1"></td>
-                    <td bgcolor="f1f1f1"></td>
-                    <td bgcolor="f1f1f1"></td>
-                    <td bgcolor="44c5f8">' . $element['chb_nb'] . '</td>
-                    <td bgcolor="44c5f8">' . $date_week . '</td>
-                    <td bgcolor="44c5f8">' . number_format($element['chb_week'], 0, ',', ' ') . '</td>
-                    <td bgcolor="44c5f8">' . number_format($date_week * $element['chb_week'] * $element['chb_nb'], 0, ',', ' ') . '</td>
-                    <td>' . number_format((($date_sem * $element['chb_sem'] + $date_week * $element['chb_week']) * $element['chb_nb']), 0, ',', ' ') . '</td>
-                    </tr>';
-                                    } elseif ($date_week == 0) {
-                                        $html .= '
-                    <tr>
-                    <td>' . date("d/m/Y", strtotime($element['arrive'])) . '</td>
-                    <td>' . date("d/m/Y", strtotime($element['depart'])) . '</td>
-                    <td>' . $element['pers_nb'] . '</td>
-                    <td>' . $element['chb_nom_ang'] . '</td>
-                    <td bgcolor="f1f1f1">' . $element['chb_nb'] . '</td>
-                    <td bgcolor="f1f1f1">' . $date_sem . '</td>
-                    <td bgcolor="f1f1f1">' . number_format($element['chb_sem'], 0, ',', ' ') . '</td>
-                    <td bgcolor="f1f1f1">' . number_format($date_sem * $element['chb_sem'] * $element['chb_nb'], 0, ',', ' ') . '</td>
-                    <td bgcolor="44c5f8"></td>
-                    <td bgcolor="44c5f8"></td>
-                    <td bgcolor="44c5f8"></td>
-                    <td bgcolor="44c5f8"></td>
-                    <td>' . number_format((($date_sem * $element['chb_sem'] + $date_week * $element['chb_week']) * $element['chb_nb']), 0, ',', ' ') . '</td>
-                    </tr>';
-                                    } else {
-                                        $html .= '
-                    <tr>
-                    <td>' . date("d/m/Y", strtotime($element['arrive'])) . '</td>
-                    <td>' . date("d/m/Y", strtotime($element['depart'])) . '</td>
-                    <td>' . $element['pers_nb'] . '</td>
-                    <td>' . $element['chb_nom_ang'] . '</td>
-                    <td bgcolor="f1f1f1">' . $element['chb_nb'] . '</td>
-                    <td bgcolor="f1f1f1">' . $date_sem . '</td>
-                    <td bgcolor="f1f1f1">' . number_format($element['chb_sem'], 0, ',', ' ') . '</td>
-                    <td bgcolor="f1f1f1">' . number_format($date_sem * $element['chb_sem'] * $element['chb_nb'], 0, ',', ' ') . '</td>
-                    <td bgcolor="44c5f8">' . $element['chb_nb'] . '</td>
-                    <td bgcolor="44c5f8">' . $date_week . '</td>
-                    <td bgcolor="44c5f8">' . number_format($element['chb_week'], 0, ',', ' ') . '</td>
-                    <td bgcolor="44c5f8">' . number_format($date_week * $element['chb_week'] * $element['chb_nb'], 0, ',', ' ') . '</td>
-                    <td>' . number_format((($date_sem * $element['chb_sem'] + $date_week * $element['chb_week']) * $element['chb_nb']), 0, ',', ' ') . '</td>
-                    </tr>';
-                                    }
-                                }
+                $i = 1;
+                foreach ($factures as $facture) {
 
-                                $html .= '</tbody>
-<tfoot>
-<td colspan="12" style="font-weight: bold">Day(s) : ' . $nuite . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Number of
-customer(s) : ' . $pers . '<span style="margin-left: 150px;"> Total</span></td>
-                                <td style="font-weight: bold">' . number_format($total_resa, 0, ',', ' ') . '</td>
-                                </tfoot>
-                                </table>';
+                    $detail = '<form action="detailResaClient.php" method="post" id="formulaire"
+    name="formulaire"><input class="btn btn-secondary" type="submit"
+    name="detail" id="add" value="Details"><input type="hidden" name="fact" value=' . $facture['id_fact'] . '><input type="hidden" name="cl" value=' . $facture['id_cl'] . '></form>';
+                    if ($facture['statut'] == 0) {
+                        $statut = '<div style="color:red">Waiting</div>';
+                    } else {
+                        $statut = '<form action="reglement.php#section4" method="post" id="formulaire"
+        name="formulaire"><input class="btn btn-success" type="submit"
+        name="payement" id="add" value="Proceed to payment"><input type="hidden" name="fact" value=' . $facture['id_fact'] . '><input type="hidden" name="cl" value=' . $facture['id_cl'] . '></form>';
+                    }
 
-                                echo $html;
+                    if ($facture['paye'] == 0) {
+                        $paye = '<div style="color:red">Unpaid</div>';
+                    } else {
+                        $paye = '<div style="color:green">Paid</div>';
+                    }
 
-                                ?>
-                            </div>
-                            <?php
+                    $html .= '
+<tr>
+<td>' . $facture['id_fact'] . '</td>
+<td>' . date("d/m/Y H:i:s", strtotime($facture['date_fact'])) . '</td>
+<td>' . number_format($facture['montant'], 0, ',', ' ') . ' </td>
+<td>' . $paye . '</td>
+<td>' . $statut . '</td>
+<td>' . $detail . '</td>
+</tr>';
+                    $i++;
+                }
 
-                            ?>
+                $html .= '</tbody>
+</table>';
 
+                echo $html;
 
-                            <br>
-                            <center>
-                                <?php if (isset($_SESSION['utilisateur'])) {
-                                    echo '<form action="enregisteDetailFactang.php" method="post" id="formulaire" name="formulaire"><input type="submit" class="btn btn-primary" style="width:160px;height: 34px;" name="reserver" value="Reserve"></form>';
-                                } else {
-                                    echo '<a href="infoclang.php#section3"><button type="submit" class="btn btn-primary"
-                                            style="width:160px;height: 34px;" name="save" id="save">Next step</button></a>';
-                                } ?>
-
-                            </center>
+                ?>
+            </div>
+        </div>
 
 
 
 
 
 
-                            <!-- debut bas -->
-                            <div class="our-sevices text-center ptb-80 white_bg">
+
+
+        <!-- debut bas -->
+        <div class="our-sevices text-center ptb-80 white_bg">
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-md-12">

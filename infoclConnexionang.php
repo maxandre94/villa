@@ -1,20 +1,20 @@
 <?php
 session_start();
-//unset($_SESSION['resa']);
-//unset($_SESSION['utilisateur']);
-//$_SESSION['resa'] = null;
-//print_r($_SESSION['utilisateur']);
+//require_once './connection.php';
+if (isset($_SESSION['resa'])) $_resa = $_SESSION['resa'];
+else $_resa = array();
+//print_r($_resa);
 
-require_once './connection.php';
 require_once './admin/config.php';
-
-$types = $connect_PDO->query('SELECT * from type')->fetchAll();
-
-
+//if (!isset($_SESSION['utilisateur'])) {
+//header('Location:detail.php');
+//die();
+//}
 
 ?>
+
 <!DOCTYPE html>
-<html class="no-js" lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="utf-8">
@@ -109,7 +109,7 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                                     <div class="header-top ptb-10">
                                         <div class="adresses">
                                             <div class="phone">
-                                                <p>Phone: <span>+225 07 07 43 43 94</span></p>
+                                                <p>Phone : <span>+225 07 07 43 43 94</span></p>
                                             </div>
                                             <div class="email">
                                                 <p>Email: <span>reservation@villa_blanca.ci</span></p>
@@ -156,7 +156,6 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                                                         echo '<li><a href="connexionClientang.php">Connection</a></li>';
                                                     }
                                                     ?>
-
                                                 </ul>
                                             </nav>
                                         </div>
@@ -243,10 +242,10 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                         <div class="col-md-12">
                             <div class="booking-rooms-tab text-left">
                                 <ul class="nav" role="tablist">
-                                    <li class="active"><a href="/villa/detailang.php" data-toggle="tab" name="section1"><span class="tab-border">1</span><span>Rooms infos</span></a></li>
+                                    <li><a href="/villa/detailang.php" data-toggle="tab"><span class="tab-border">1</span><span>Rooms infos</span></a></li>
                                     <li><a href="/villa/detail-factureang.php" data-toggle="tab"><span class="tab-border">2</span><span>Invoice details</span></a>
                                     </li>
-                                    <li><a href="/villa/infoclang.php" data-toggle="tab"><span class="tab-border">3</span><span>Customer(s) Info</span></a>
+                                    <li class="active"><a href="/villa/infoclang.php" data-toggle="tab" name="section3"><span class="tab-border">3</span><span>Customer(s) Info</span></a>
                                     </li>
                                     <li><a href="#payment" data-toggle="tab"><span class="tab-border">4</span><span>Regulation</span></a>
                                     </li>
@@ -255,167 +254,93 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                             </div>
 
                             <br /><br /><br />
+                            <hr>
+                            <!-- FIN en tête -->
 
-                            <div style="display: flex">
+
+                            <div class="login">
                                 <?php
-                                foreach ($types as $type) {
-                                    echo '
-                                            <div class="container">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div class="booking-rooms-tab text-left"><div class="room-img"><img src=' . $type->img_typ . ' style="width: 250px; height: 250px;" alt=""><div style="padding:20px;flex-grow: 1;border-bottom:1px gainsboro solid">
-                                    <div style="font-weight: bolder;font-size: 15px;text-align: center">' . $type->nom_typ_ang . '</div>
-                                    <div style="padding:10px 0;display: flex;align-items: center;justify-content: center"> <span style="font-size: 15px">' . $type->prix_sem . '</span> &nbsp; / weekday</div>
+                                if (isset($_GET['login_err'])) {
+                                    $err = htmlspecialchars($_GET['login_err']);
 
-                                    <div style="padding:5px 0;display: flex;align-items: center;justify-content: center"> <span style="font-size: 15px">' . $type->prix_week . '</span> &nbsp; / weekend day</div>
-                                </div></div></div></div></div></div>';
-                                }
-
+                                    switch ($err) {
+                                        case 'password':
                                 ?>
-
-                            </div>
-                        </div><br><label> &nbsp </label>
-
-                        <form action="/resaAjoutang.php" method="POST" class="insert-form" id="formulaire" name="formulaire">
-                            <div class="form-row">
-                                <div class="form-group col-md-2">
-                                    <label for="validationCustom02" class="form-label" style="font-family:Segoe UI semibold; ">Arrival</label>
-                                    <input type="date" name="arrive" id="arrive" value="<?php echo date('Y-m-d'); ?>" />
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label for="validationCustom02" class="form-label" style="font-family:Segoe UI semibold; ">Departure</label>
-                                    <input type="date" class="" name="depart" id="depart" value="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" />
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label for="nomb">Room type</label>
-                                    <!--<select class="" id="chb_type" name="chb_type" onchange="alert(this.value)">-->
-                                    <select class="" id="chb_type" name="chb_type">
+                                            <div class="alert alert-danger">
+                                                <strong>Error</strong> incorrect password
+                                            </div>
                                         <?php
-                                        foreach ($types as $type) {
-                                            $type_nom = str_replace(' ', '.', $type->nom_typ);
-                                            $type_nom_ang = str_replace(' ', '.', $type->nom_typ_ang);
-                                            echo '
-                                <option value=' . $type->id_typ . '|' . $type_nom . '|' . $type->prix_sem . '|' . $type->prix_week . '|' . $type_nom_ang . '>' . $type->nom_typ_ang . '</option>';
-                                        } ?>
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label for="nbch" class="">Room number</label>
-                                    <select class="" id="chb_nb" name="chb_nb">
-                                        <?php for ($i = 1; $i <= 20; $i++) {
-                                            echo '<option value=' . $i . '>' . $i . '</option>';
-                                        }; ?>
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label for="nbper" class="">Number of people</label>
-                                    <select class="" id="pers_nb" name="pers_nb">
-                                        <?php for ($i = 1; $i <= 20; $i++) {
-                                            echo '<option value=' . $i . '>' . $i . '</option>';
-                                        }; ?>
-                                    </select>
-                                </div>
+                                            break;
 
-                            </div>
-                            <br><br /><input class="btn btn-success" type="submit" style="width:85px;height: 34px;" name="add" id="add" value="Reserve">
+                                        case 'email':
+                                        ?>
+                                            <div class="alert alert-danger">
+                                                <strong>Error</strong> incorrect email
+                                            </div>
+                                        <?php
+                                            break;
 
-                        </form>
-
-                    </div><br>
-
-
-
-                    <div id="table_resa">
-                        <?php
-                        if (isset($_GET['reg_err'])) {
-                            $err = htmlspecialchars($_GET['reg_err']);
-
-                            switch ($err) {
-                                case 'date':
-                        ?>
-                                    <div class="alert alert-danger">
-                                        <strong>Error</strong> the arrival date must be later than the departure date
-                                    </div>
+                                        case 'already':
+                                        ?>
+                                            <div class="alert alert-danger">
+                                                <strong>Error</strong> non-existent account
+                                            </div>
                                 <?php
-                                    break;
-
-                                case 'datejour':
-                                ?>
-                                    <div class="alert alert-danger">
-                                        <strong>Error</strong> the arrival date must be in the month equal to the current date
-                                    </div>
-                                <?php
-                                    break;
-
-                                case 'chambre':
-                                ?>
-                                    <div class="alert alert-danger">
-                                        <strong>Error</strong> the number of people must be greater than or equal to the number of rooms
-                                    </div>
-                        <?php
-                                    break;
-                            }
-                        }
-                        ?>
-
-                        <table class="table table-bordered">
-                            <caption>Detail of your reservation</caption>
-                            <thead>
-                                <tr>
-                                    <th scope="col"></th>
-                                    <th scope="col" >Arrival</th>
-                                    <th scope="col">Departure</th>
-                                    <th scope="col">Room type</th>
-                                    <th scope="col">Room number</th>
-                                    <th scope="col">Number of people</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-
-                                <?php
-                                if (isset($_SESSION['resa'])) {
-                                    $_resa = $_SESSION['resa'];
-                                    foreach ($_resa as $ligne => $une_resa) {
-                                        $valeur = $une_resa['index'];
-                                        //$index="ResaSupprime('".$valeur."'); ";
-
-                                ?>
-                                        <tr>
-                                            <td><input type="button" class="btn btn-danger" onclick="ResaSupprime('<?= $valeur ?>'); " value="Delete"></td>
-                                            <td><?= date("d/m/Y", strtotime($une_resa['arrive'])) ?></td>
-                                            <td><?= date("d/m/Y", strtotime($une_resa['depart'])) ?></td>
-                                            <td><?= $une_resa['chb_nom_ang'] ?></td>
-                                            <td><?= $une_resa['chb_nb'] ?></td>
-                                            <td><?= $une_resa['pers_nb'] ?></td>
-                                        </tr>
-
-                                <?php
+                                            break;
                                     }
                                 }
                                 ?>
-                            </tbody>
-                        </table>
+                                <form action="infoconnexionang.php" method="post">
+                                    <h2 class="text-center">Connection</h2>
+                                    <div class="form-group">
+                                        <input type="email" name="email" class="form-control" placeholder="Email" required="required" autocomplete="off">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" name="password" class="form-control" placeholder="Password" required="required" autocomplete="off">
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary btn-block">Connection</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <style>
+                                .login {
+                                    width: 340px;
+                                    margin: 50px auto;
+                                }
 
-                    </div>
-                    <br>
-                    <center>
-                        <a href="controleang.php"><input type="submit" class="btn btn-primary" style="width:160px;height: 34px;" name="save" id="save" value="Next step"></a>
-                    </center>
+                                .login form {
+                                    margin-bottom: 15px;
+                                    background: #f7f7f7;
+                                    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+                                    padding: 30px;
+                                }
+
+                                .login h2 {
+                                    margin: 0 0 15px;
+                                }
+
+                                .form-control,
+                                .btn {
+                                    min-height: 38px;
+                                    border-radius: 2px;
+                                }
+
+                                .btn {
+                                    font-size: 15px;
+                                    font-weight: bold;
+                                }
+                            </style>
+                        </div>
 
 
 
 
-                    <br><br>
-                    <hr><br><br>
 
 
 
-
-
-                    <!--hotel team end-->
-                    <!--Our Location start-->
-                    <div class="our-sevices text-center ptb-80 white_bg">
+                        <!-- debut bas -->
+                     <div class="our-sevices text-center ptb-80 white_bg">
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-md-12">
@@ -507,89 +432,6 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                             </div>
                         </div>
                     </div>
-
-                    <script>
-                        function AjouterPanier() {
-
-
-                            if (confirm('Confirmez-vous le paiement de ?')) {
-                                var ladate = new Date();
-                                var Milliseconds = ladate.getMilliseconds();
-                                var Day = ladate.getDay();
-                                var code = Milliseconds + Day;
-
-                                var valeur = prompt("Paiment de " + _saphir + "\n\nVeillez saisir le code validation: " +
-                                    code);
-
-                                if (valeur != code) {
-                                    alert('Le code saisi est incorrect');
-
-                                } else {
-                                    $.ajax({
-                                        url: 'resaAjoutang.php',
-                                        type: 'post',
-                                        data: 'SAPHIR=' + _saphir,
-                                        success: function(html) {
-                                            //alert(html);
-
-                                            var Reponse = JSON.parse(html);
-                                            if (Reponse.success) {
-                                                window.location.reload();
-                                            } else {
-                                                alert(Reponse.text);
-                                            }
-                                        }
-
-                                    });
-                                }
-
-                            }
-
-                        };
-
-                        $(document).ready(function() {
-                            //alert('bonjour0');
-                            $('#formulaire').on('submit', function(e) {
-                                e
-                                    .preventDefault(); // J'empêche le comportement par défaut du navigateur, c-à-d de soumettre le formulaire
-                                var $this = $(this); // L'objet jQuery du formulaire
-                                //alert('bonjour');
-
-                                $.ajax({
-                                    url: 'resaAjoutang.php', //url: $this.attr('action'), // Le nom du fichier indiqué dans le formulaire
-                                    type: 'post', //type: $this.attr('method'), // La méthode indiquée dans le formulaire (get ou post)
-                                    data: $this
-                                        .serialize(), // Je sérialise les données (j'envoie toutes les valeurs présentes dans le formulaire)
-                                    success: function(html) {
-                                        //alert(html);
-                                        document.getElementById('table_resa').innerHTML = html;
-
-                                    }
-
-                                });
-
-                                //alert('fin');
-                            });
-                        });
-                    </script>
-
-                    <script>
-                        function ResaSupprime(index) {
-                            //alert("suppression");
-                            //no clue what to put here?
-                            $.ajax({
-                                url: 'resaSup.php', //url: $this.attr('action'), // Le nom du fichier indiqué dans le formulaire
-                                type: 'post', //type: $this.attr('method'), // La méthode indiquée dans le formulaire (get ou post)
-                                data: 'index=' +
-                                    index, // Je sérialise les données (j'envoie toutes les valeurs présentes dans le formulaire)
-                                success: function(html) {
-                                    document.getElementById('table_resa').innerHTML = html;
-
-                                }
-
-                            });
-                        }
-                    </script>
 
 </body>
 

@@ -1,6 +1,17 @@
 <?php
 session_start();
-$_SESSION['langue']='Français';
+
+if(isset($_SESSION['utilisateur'])){
+
+    $id_cl = $_SESSION['utilisateur'];
+
+    $req = $bdd->prepare('SELECT * FROM client WHERE id_cl=?');
+    $req->execute(array($id_cl));
+    $client = $req->fetch();
+
+    if($client['langue']=='Anglais')header('Location:indexang.php');
+
+}else $_SESSION['langue']='Français';
 ?>
 
 <!doctype html>

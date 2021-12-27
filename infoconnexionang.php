@@ -107,21 +107,21 @@ if (!empty($_POST['email']) && !empty($_POST['password'])) // Si il existe les c
                 // On créer la session et on redirige sur landing.php
                 $_SESSION['utilisateur'] = $data['id_cl'];
                 unset($_SESSION['resa']);
-                header('Location: resaClient.php');
+                header('Location: resaClientang.php');
                 die();
             } else {
-                header('Location: infoclConnexion.php?login_err=password');
+                header('Location: infoclConnexionang.php?login_err=password');
                 die();
             }
         } else {
-            header('Location: infoclConnexion.php?login_err=email');
+            header('Location: infoclConnexionang.php?login_err=email');
             die();
         }
     } else {
-        header('Location: infoclConnexion.php?login_err=already');
+        header('Location: infoclConnexionang.php?login_err=already');
         die();
     }
 } else {
-    header('Location: infoclConnexion.php');
+    header('Location: infoclConnexionang.php');
     die();
 } // si le formulaire est envoyé sans aucune données

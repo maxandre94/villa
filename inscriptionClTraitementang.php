@@ -56,11 +56,11 @@ if(!empty($_POST['nom']) && !empty($_POST['pren']) && !empty($_POST['tel']) && !
         unset($_SESSION['langue']);
                             
                             // On redirige avec le message de succès
-                            header('Location:connexionClient.php');die();}
-                        } else {header('Location: inscriptionClient.php?reg_err=password');die();}
-                        }else{ header('Location: inscriptionClient.php?reg_err=email_length'); die();}
+                            header('Location:connexionClientang.php');die();}
+                        } else {header('Location: inscriptionClientang.php?reg_err=password');die();}
+                        }else{ header('Location: inscriptionClientang.php?reg_err=email_length'); die();}
                     //}else{ header('Location: infocl.php?reg_err=tel_length'); die();}
-                }else{ header('Location: inscriptionClient.php?reg_err=pren_length'); die();}
-            }else{ header('Location: inscriptionClient.php?reg_err=nom_length'); die();}
-        }else{header('Location:inscriptionClient.php?reg_err=already');die();}//il existe déjà
+                }else{ header('Location: inscriptionClientang.php?reg_err=pren_length'); die();}
+            }else{ header('Location: inscriptionClientang.php?reg_err=nom_length'); die();}
+        }else{header('Location:inscriptionClientang.php?reg_err=already');die();}//il existe déjà
     }

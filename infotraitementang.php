@@ -1,5 +1,6 @@
 <?php
 session_start();
+if(isset($_SESSION['langue']))$langue=$_SESSION['langue'];
 if(isset($_SESSION['resa']))$_resa=$_SESSION['resa'];
 else $_resa=array();
 
@@ -143,12 +144,12 @@ $exec = $res->execute();
         unset($_SESSION['langue']);
                             
                             // On redirige avec le message de succès
-                            header('Location:resaClient.php');die();}
-                        } else {header('Location: infocl.php?reg_err=password');die();}
-                        }else{ header('Location: infocl.php?reg_err=email_length'); die();}
+                            header('Location:resaClientang.php');die();}
+                        } else {header('Location: infoclang.php?reg_err=password');die();}
+                        }else{ header('Location: infoclang.php?reg_err=email_length'); die();}
                     //}else{ header('Location: infocl.php?reg_err=tel_length'); die();}
-                }else{ header('Location: infocl.php?reg_err=pren_length'); die();}
-            }else{ header('Location: infocl.php?reg_err=nom_length'); die();}
+                }else{ header('Location: infoclang.php?reg_err=pren_length'); die();}
+            }else{ header('Location: infoclang.php?reg_err=nom_length'); die();}
         }else{
             /*$date = date("Y-m-d H:i:s");
 
@@ -190,5 +191,5 @@ $exec = $res->execute();
             $query="UPDATE facture SET montant='$montan' WHERE id_fact='$id_fact'";
             $res = $connect_PDO->prepare($query);
             $exec = $res->execute();*/
-  header('Location:infocl.php?reg_err=already');die();}//il existe déjà
+  header('Location:infoclang.php?reg_err=already');die();}//il existe déjà
     }
