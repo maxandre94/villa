@@ -3,7 +3,7 @@ session_start();
 
 require_once './admin/config.php';
 if (!isset($_SESSION['utilisateur'])) {
-    header('Location:detail.php');
+    header('Location:detailang.php');
     die();
 }
 
@@ -183,7 +183,7 @@ function ResaSpitPeriod($date_debut, $date_fin)
                                                     <li><a href="seminaires.php">SEMINARS</a></li>
                                                     <li><a href="resto.php">RESTAURANT</a></li>
                                                     <li><a href="loisirs.php">HOBBIES</a></li>
-                                                    <li><a href="detailang.php" class="btn btn-danger">RESERVATION</a></li>
+                                                    <li><a href="detailang.php">RESERVATION</a></li>
                                                     <?php if (isset($_SESSION['utilisateur'])) {
                                                         $req = $bdd->prepare('SELECT * FROM facture WHERE id_cl=?');
                                                         $req->execute(array($_SESSION['utilisateur']));
@@ -199,17 +199,18 @@ function ResaSpitPeriod($date_debut, $date_fin)
                                                             }
                                                         }
                                                         if ($row == 0 && $rowN != 0) {
-                                                            echo '<li><span style="border-radius: 30px;
-                                                                background: red; color: white">' . $rowN . '</span>&nbsp<a href="resaClientang.php" class="btn btn-danger">My reservations</a></li>';
+                                                            echo '<li><span class="badge badge-warning" id="lblCartCounts">' . $rowN . '</span><a href="resaClientang.php" class="btn btn-danger">My reservations</a>
+                                                            <a href="resaClientang.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a></li>';
                                                         }
                                                         if ($row != 0 && $rowN == 0) {
-                                                            echo '<li><a href="resaClientang.php" class="btn btn-danger">My reservations</a>&nbsp<span style="border-radius: 30px;
-                                                                background: green;">' . $row . '</span></li>';
+                                                            echo '<li><a href="resaClientang.php" class="btn btn-danger">My reservations</a>
+                                                            <a href="resaClientang.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                            <span class="badge badge-warning" id="lblCartCount">' . $row . '</span></li>';
                                                         }
                                                         if ($row != 0 && $rowN != 0) {
-                                                            echo '<li><span style="border-radius: 30px;
-                                                                background: red; color: white">' . $rowN . '</span>&nbsp<a href="resaClientang.php" class="btn btn-danger">My reservations</a>&nbsp<span style="border-radius: 30px;
-                                                                background: green; color: white">' . $row . '</span></li>';
+                                                            echo '<li><span class="badge badge-warning" id="lblCartCounts">' . $rowN . '</span><a href="resaClientang.php" class="btn btn-danger">My reservations</a>
+                                                            <a href="resaClientang.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                            <span class="badge badge-warning" id="lblCartCount">' . $row . '</span></li>';
                                                         }
                                                     } else {
                                                         echo '<li><a href="connexionClientang.php">Connexion</a></li>';
@@ -281,6 +282,37 @@ function ResaSpitPeriod($date_debut, $date_fin)
                 </div>
             </div>
         </div>
+        <style>
+            .badge {
+  padding-left: 9px;
+  padding-right: 9px;
+  -webkit-border-radius: 9px;
+  -moz-border-radius: 9px;
+  border-radius: 9px;
+}
+
+.label-warning[href],
+.badge-warning[href] {
+  background-color: #c67605;
+}
+#lblCartCount {
+    font-size: 12px;
+    background: green;
+    color: #fff;
+    padding: 0 5px;
+    vertical-align: top;
+    margin-left: -10px; 
+}
+#lblCartCounts {
+    font-size: 12px;
+    background: #ff0000;
+    color: #fff;
+    padding: 0 5px;
+    vertical-align: top;
+    margin-left: -10px; 
+}
+</style>
+
         <!-- FIN en tête -->
 
 

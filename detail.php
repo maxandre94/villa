@@ -9,6 +9,13 @@ session_start();
 require_once './connection.php';
 require_once './admin/config.php';
 
+if(isset($_SESSION['utilisateur'])){
+    $id_cl=$_SESSION['utilisateur'];
+    $req = $bdd->prepare('SELECT * FROM client WHERE id_cl=?');
+    $req->execute(array($id_cl));
+    $client = $req->fetch();
+    if($client['langue']=='Anglais')header('Location: detailang.php');
+}
 $types = $connect_PDO->query('SELECT * from type')->fetchAll();
 
 
@@ -140,17 +147,18 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
                                                             }
                                                         }
                                                         if ($row == 0 && $rowN != 0) {
-                                                            echo '<li><a href="resaClient.php"><span style="border-radius: 30px;
-                                                            background: red;">' . $rowN . '</span> Mes réservations </a></li>';
+                                                            echo '<li><span class="badge badge-warning" id="lblCartCounts">' . $rowN . '</span><a href="resaClient.php">Mes réservations</a>
+                                                            <a href="resaClient.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a></li>';
                                                         }
                                                         if ($row != 0 && $rowN == 0) {
-                                                            echo '<li><a href="resaClient.php">Mes réservations <span style="border-radius: 30px;
-                                                                background: green;">' . $row . '</span></a></li>';
+                                                            echo '<li><a href="resaClient.php">Mes réservations</a>
+                                                            <a href="resaClient.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                            <span class="badge badge-warning" id="lblCartCount">' . $row . '</span></li>';
                                                         }
                                                         if ($row != 0 && $rowN != 0) {
-                                                            echo '<li><a href="resaClient.php"><span style="border-radius: 30px;
-                                                            background: red;">' . $rowN . '</span> Mes réservations <span style="border-radius: 30px;
-                                                            background: green;">' . $row . '</span></a></li>';
+                                                            echo '<li><span class="badge badge-warning" id="lblCartCounts">' . $rowN . '</span><a href="resaClient.php">Mes réservations</a>
+                                                            <a href="resaClient.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                            <span class="badge badge-warning" id="lblCartCount">' . $row . '</span></li>';
                                                         }
                                                     } else {
                                                         echo '<li><a href="connexionClient.php">Connexion</a></li>';
@@ -254,6 +262,36 @@ $types = $connect_PDO->query('SELECT * from type')->fetchAll();
 
                                 </ul>
                             </div>
+                            <style>
+            .badge {
+  padding-left: 9px;
+  padding-right: 9px;
+  -webkit-border-radius: 9px;
+  -moz-border-radius: 9px;
+  border-radius: 9px;
+}
+
+.label-warning[href],
+.badge-warning[href] {
+  background-color: #c67605;
+}
+#lblCartCount {
+    font-size: 12px;
+    background: green;
+    color: #fff;
+    padding: 0 5px;
+    vertical-align: top;
+    margin-left: -10px; 
+}
+#lblCartCounts {
+    font-size: 12px;
+    background: #ff0000;
+    color: #fff;
+    padding: 0 5px;
+    vertical-align: top;
+    margin-left: -10px; 
+}
+</style>
 
                             <br /><br /><br />
 

@@ -56,7 +56,6 @@ $check->execute(array($id_cl));
 $data = $check->fetch();
 
 $date = date("Y-m-d H:i:s");
-
 $montan = 0;
 $query = "INSERT INTO facture (id_cl,date_fact, montant) 
                               VALUES ('$id_cl', '$date', '$montan')";

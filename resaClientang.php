@@ -2,7 +2,7 @@
 session_start();
 require_once './admin/config.php';
 if (!isset($_SESSION['utilisateur'])) {
-    header('Location:detail.php');
+    header('Location:detailang.php');
     die();
 }
 
@@ -139,7 +139,7 @@ $factures = $req->fetchAll();
                                                     <li><a href="seminaires.php">SEMINARS</a></li>
                                                     <li><a href="resto.php">RESTAURANT</a></li>
                                                     <li><a href="loisirs.php">HOBBIES</a></li>
-                                                    <li><a href="detailang.php" class="btn btn-danger">RESERVATION</a></li>
+                                                    <li><a href="detailang.php">RESERVATION</a></li>
                                                     <?php if (isset($_SESSION['utilisateur'])) {
                                                         $req = $bdd->prepare('SELECT * FROM facture WHERE id_cl=?');
                                                         $req->execute(array($_SESSION['utilisateur']));
@@ -155,17 +155,18 @@ $factures = $req->fetchAll();
                                                             }
                                                         }
                                                         if ($row == 0 && $rowN != 0) {
-                                                            echo '<li><span style="border-radius: 30px;
-                                                                background: red; color: white">' . $rowN . '</span>&nbsp<a href="resaClientang.php" class="btn btn-danger">My reservations</a></li>';
+                                                            echo '<li><span class="badge badge-warning" id="lblCartCounts">' . $rowN . '</span><a href="resaClientang.php" class="btn btn-danger">My reservations</a>
+                                                            <a href="resaClientang.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a></li>';
                                                         }
                                                         if ($row != 0 && $rowN == 0) {
-                                                            echo '<li><a href="resaClientang.php" class="btn btn-danger">My reservations</a>&nbsp<span style="border-radius: 30px;
-                                                                background: green; color: white">' . $row . '</span></li>';
+                                                            echo '<li><a href="resaClientang.php" class="btn btn-danger">My reservations</a>
+                                                            <a href="resaClientang.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                            <span class="badge badge-warning" id="lblCartCount">' . $row . '</span></li>';
                                                         }
                                                         if ($row != 0 && $rowN != 0) {
-                                                            echo '<li><span style="border-radius: 30px;
-                                                                background: red; color: white">' . $rowN . '</span>&nbsp<a href="resaClientang.php" class="btn btn-danger">My reservations</a>&nbsp<span style="border-radius: 30px;
-                                                                background: green; color: white">' . $row . '</span></li>';
+                                                            echo '<li><span class="badge badge-warning" id="lblCartCounts">' . $rowN . '</span><a href="resaClientang.php" class="btn btn-danger">My reservations</a>
+                                                            <a href="resaClientang.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                            <span class="badge badge-warning" id="lblCartCount">' . $row . '</span></li>';
                                                         }
                                                     }
                                                     ?>
@@ -236,6 +237,36 @@ $factures = $req->fetchAll();
                 </div>
             </div>
         </div>
+        <style>
+            .badge {
+  padding-left: 9px;
+  padding-right: 9px;
+  -webkit-border-radius: 9px;
+  -moz-border-radius: 9px;
+  border-radius: 9px;
+}
+
+.label-warning[href],
+.badge-warning[href] {
+  background-color: #c67605;
+}
+#lblCartCount {
+    font-size: 12px;
+    background: green;
+    color: #fff;
+    padding: 0 5px;
+    vertical-align: top;
+    margin-left: -10px; 
+}
+#lblCartCounts {
+    font-size: 12px;
+    background: #ff0000;
+    color: #fff;
+    padding: 0 5px;
+    vertical-align: top;
+    margin-left: -10px; 
+}
+            </style>
         <!-- FIN en tête -->
 
 
@@ -252,6 +283,13 @@ $factures = $req->fetchAll();
                 <div class="row">
                     <div class="col-md-12">
                         <div class="section-title mb-50">
+                        <div class="alert alert-success" role="alert">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+  </svg>
+  <h4 class="alert-heading">Thank you for contacting VILLA BLANCA.</h4>
+  <p class="mb-0">We check the availability of your reservation and we will get back to you in less than 30 min.</p>
+</div>
                             <h2>
                                 <h1 style="font-family: 'Reggae One', cursive;">Invoices</h1>
                             </h2>
@@ -277,13 +315,13 @@ $factures = $req->fetchAll();
                 $i = 1;
                 foreach ($factures as $facture) {
 
-                    $detail = '<form action="detailResaClient.php" method="post" id="formulaire"
+                    $detail = '<form action="detailResaClientang.php" method="post" id="formulaire"
     name="formulaire"><input class="btn btn-secondary" type="submit"
     name="detail" id="add" value="Details"><input type="hidden" name="fact" value=' . $facture['id_fact'] . '><input type="hidden" name="cl" value=' . $facture['id_cl'] . '></form>';
                     if ($facture['statut'] == 0) {
                         $statut = '<div style="color:red">Waiting</div>';
                     } else {
-                        $statut = '<form action="reglement.php#section4" method="post" id="formulaire"
+                        $statut = '<form action="cinetpay/index.php" method="post" id="formulaire"
         name="formulaire"><input class="btn btn-success" type="submit"
         name="payement" id="add" value="Proceed to payment"><input type="hidden" name="fact" value=' . $facture['id_fact'] . '><input type="hidden" name="cl" value=' . $facture['id_cl'] . '></form>';
                     }

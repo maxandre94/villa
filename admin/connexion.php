@@ -22,7 +22,7 @@ if (!empty($_POST['email']) && !empty($_POST['password'])) // Si il existe les c
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             // Si le mot de passe est le bon
             if (password_verify($password, $data['password'])) {
-                if ($data['valide'] == 1) {
+                if ($data['valide'] == 1 || $data['valide'] == 55) {
                     // On créer la session et on redirige sur landing.php
                     $_SESSION['user'] = $data['token'];
                     header('Location: home.php');

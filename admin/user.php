@@ -43,6 +43,7 @@ $html = '<table class="table table-bordered" style="margin:10px 150px 10px 110px
 <th scope="col">Prénom</th>
 <th scope="col">Email</th>
 <th scope="col">N° téléphone</th>
+<th scope="col">Langue</th>
 </tr>
 </thead>
 <tbody>';
@@ -57,6 +58,7 @@ foreach ($types as $type) {
 <td>' . $type['prenom_cl'] . '</td>
 <td>' . $type['email'] . '</td>
 <td>' . $type['tel_cl'] . '</td>
+<td>' . $type['langue'] . '</td>
 </tr>';
     $i++;
 }

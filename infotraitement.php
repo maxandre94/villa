@@ -82,10 +82,11 @@ require_once './connection.php'; // On inclu la connexion à la bdd
                             // On insère dans la base de données
                             // On hash le mot de passe avec Bcrypt, via un coût de 12
                             $langue=$_SESSION['langue'];
+                            $token = bin2hex(openssl_random_pseudo_bytes(64));
                             $cost = ['cost' => 12];
                             $password = password_hash($password, PASSWORD_BCRYPT, $cost);
-                            $query = "INSERT INTO client (langue, civilite_cl, nom_cl, prenom_cl, email, mot_pas, tel_cl) 
-      	    	  VALUES ('$langue', '$civilite', '$nom', '$pren', '$email', '$password', '$tel')";
+                            $query = "INSERT INTO client (langue, civilite_cl, nom_cl, prenom_cl, email, mot_pas, tel_cl, token) 
+      	    	  VALUES ('$langue', '$civilite', '$nom', '$pren', '$email', '$password', '$tel', '$token')";
   $res = $connect_PDO->prepare($query);
   $exec = $res->execute();
 

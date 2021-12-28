@@ -118,7 +118,7 @@ else $_resa=array();
                                                     <li><a href="seminaires.php">SEMINARS</a></li>
                                                     <li><a href="resto.php">RESTAURANT</a></li>
                                                     <li><a href="loisirs.php">HOBBIES</a></li>
-                                                    <li><a href="detailang.php" class="btn btn-danger">RESERVATION</a></li>
+                                                    <li><a href="detailang.php">RESERVATION</a></li>
                                                     <?php if (isset($_SESSION['utilisateur']))
                                                         {
                                                             $req = $bdd->prepare('SELECT * FROM facture WHERE id_cl=?');
@@ -134,23 +134,23 @@ else $_resa=array();
                                                                     $row++;
                                                                 }
                                                             }
-                                                            if($row==0 && $rowN!=0)
-                                                            {
-                                                                echo'<li><a href="resaClientang.php"><span style="border-radius: 30px;
-                                                            background: red;">'.$rowN.'</span> My reservations </a></li>';
+                                                            if ($row == 0 && $rowN != 0) {
+                                                                echo '<li><span class="badge badge-warning" id="lblCartCounts">' . $rowN . '</span><a href="resaClientang.php" class="btn btn-danger">My reservations</a>
+                                                                <a href="resaClientang.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a></li>';
                                                             }
-                                                            if($row!=0 && $rowN==0)
-                                                            {
-                                                                echo'<li><a href="resaClientang.php"> My reservations <span style="border-radius: 30px;
-                                                                background: green;">'.$row.'</span></a></li>';
+                                                            if ($row != 0 && $rowN == 0) {
+                                                                echo '<li><a href="resaClientang.php" class="btn btn-danger">My reservations</a>
+                                                                <a href="resaClientang.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                                <span class="badge badge-warning" id="lblCartCount">' . $row . '</span></li>';
                                                             }
-                                                            if($row!=0 && $rowN!=0)
-                                                            {
-                                                                echo'<li><a href="resaClientang.php"><span style="border-radius: 30px;
-                                                            background: red;">'.$rowN.'</span> My reservations <span style="border-radius: 30px;
-                                                            background: green;">'.$row.'</span></a></li>';
+                                                            if ($row != 0 && $rowN != 0) {
+                                                                echo '<li><span class="badge badge-warning" id="lblCartCounts">' . $rowN . '</span><a href="resaClientang.php" class="btn btn-danger">My reservations</a>
+                                                                <a href="resaClientang.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                                <span class="badge badge-warning" id="lblCartCount">' . $row . '</span></li>';
                                                             }
-                                                        }else{ echo'<li><a href="connexionClientang.php" class="btn btn-danger">Connection</a></li>';}
+                                                        } else {
+                                                            echo '<li><a href="connexionClientang.php" class="btn btn-danger">Connection</a></li>';
+                                                        }
                                                             ?>
 
                                                 </ul>

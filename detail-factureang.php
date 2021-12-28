@@ -237,17 +237,18 @@ function dateDiffInDays($date1, $date2)
                                                             }
                                                         }
                                                         if ($row == 0 && $rowN != 0) {
-                                                            echo '<li><a href="resaClientang.php"><span style="border-radius: 30px;
-                                                            background: red;">' . $rowN . '</span> My reservations </a></li>';
+                                                            echo '<li><span class="badge badge-warning" id="lblCartCounts">' . $rowN . '</span><a href="resaClientang.php">My reservations</a>
+                                                            <a href="resaClientang.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a></li>';
                                                         }
                                                         if ($row != 0 && $rowN == 0) {
-                                                            echo '<li><a href="resaClientang.php"> My reservations <span style="border-radius: 30px;
-                                                                background: green;">' . $row . '</span></a></li>';
+                                                            echo '<li><a href="resaClientang.php">My reservations</a>
+                                                            <a href="resaClientang.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                            <span class="badge badge-warning" id="lblCartCount">' . $row . '</span></li>';
                                                         }
                                                         if ($row != 0 && $rowN != 0) {
-                                                            echo '<li><a href="resaClientang.php"><span style="border-radius: 30px;
-                                                            background: red;">' . $rowN . '</span> My reservations <span style="border-radius: 30px;
-                                                            background: green;">' . $row . '</span></a></li>';
+                                                            echo '<li><span class="badge badge-warning" id="lblCartCounts">' . $rowN . '</span><a href="resaClientang.php">My reservations</a>
+                                                            <a href="resaClientang.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                            <span class="badge badge-warning" id="lblCartCount">' . $row . '</span></li>';
                                                         }
                                                     } else {
                                                         echo '<li><a href="connexionClientang.php">Connection</a></li>';
@@ -350,6 +351,36 @@ function dateDiffInDays($date1, $date2)
 
                                 </ul>
                             </div>
+                            <style>
+            .badge {
+  padding-left: 9px;
+  padding-right: 9px;
+  -webkit-border-radius: 9px;
+  -moz-border-radius: 9px;
+  border-radius: 9px;
+}
+
+.label-warning[href],
+.badge-warning[href] {
+  background-color: #c67605;
+}
+#lblCartCount {
+    font-size: 12px;
+    background: green;
+    color: #fff;
+    padding: 0 5px;
+    vertical-align: top;
+    margin-left: -10px; 
+}
+#lblCartCounts {
+    font-size: 12px;
+    background: #ff0000;
+    color: #fff;
+    padding: 0 5px;
+    vertical-align: top;
+    margin-left: -10px; 
+}
+</style>
 
                             <br /><br /><br />
                             <!-- FIN en tête -->
@@ -358,7 +389,7 @@ function dateDiffInDays($date1, $date2)
                             <div id="table_resa">
                                 <?php
                                 $html = '<table class="table table-bordered">
-<caption>Detail of your reservation (XAF)</caption>
+<caption>Detail of your reservation (XOF)</caption>
 <tbody>
   <tr>
     <td rowspan="2" style="font-weight: bold">Arrival</td>
@@ -470,7 +501,7 @@ customer(s) : ' . $pers . '<span style="margin-left: 150px;"> Total</span></td>
                             <br>
                             <center>
                                 <?php if (isset($_SESSION['utilisateur'])) {
-                                    echo '<form action="enregisteDetailFactang.php" method="post" id="formulaire" name="formulaire"><input type="submit" class="btn btn-primary" style="width:160px;height: 34px;" name="reserver" value="Reserve"></form>';
+                                    echo '<form action="enregistreDetailFactang.php" method="post" id="formulaire" name="formulaire"><input type="submit" class="btn btn-primary" style="width:160px;height: 34px;" name="reserver" value="Reserve"></form>';
                                 } else {
                                     echo '<a href="infoclang.php#section3"><button type="submit" class="btn btn-primary"
                                             style="width:160px;height: 34px;" name="save" id="save">Next step</button></a>';

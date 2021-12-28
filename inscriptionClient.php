@@ -134,23 +134,23 @@ else $_resa=array();
                                                                     $row++;
                                                                 }
                                                             }
-                                                            if($row==0 && $rowN!=0)
-                                                            {
-                                                                echo'<li><a href="resaClient.php"><span style="border-radius: 30px;
-                                                            background: red;">'.$rowN.'</span> Mes réservations </a></li>';
+                                                            if ($row == 0 && $rowN != 0) {
+                                                                echo '<li><span class="badge badge-warning" id="lblCartCounts">' . $rowN . '</span><a href="resaClient.php">Mes réservations</a>
+                                                                <a href="resaClient.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a></li>';
                                                             }
-                                                            if($row!=0 && $rowN==0)
-                                                            {
-                                                                echo'<li><a href="resaClient.php"> Mes réservations <span style="border-radius: 30px;
-                                                                background: green;">'.$row.'</span></a></li>';
+                                                            if ($row != 0 && $rowN == 0) {
+                                                                echo '<li><a href="resaClient.php">Mes réservations</a>
+                                                                <a href="resaClient.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                                <span class="badge badge-warning" id="lblCartCount">' . $row . '</span></li>';
                                                             }
-                                                            if($row!=0 && $rowN!=0)
-                                                            {
-                                                                echo'<li><a href="resaClient.php"><span style="border-radius: 30px;
-                                                            background: red;">'.$rowN.'</span> Mes réservations <span style="border-radius: 30px;
-                                                            background: green;">'.$row.'</span></a></li>';
+                                                            if ($row != 0 && $rowN != 0) {
+                                                                echo '<li><span class="badge badge-warning" id="lblCartCounts">' . $rowN . '</span><a href="resaClient.php">Mes réservations</a>
+                                                                <a href="resaClient.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                                <span class="badge badge-warning" id="lblCartCount">' . $row . '</span></li>';
                                                             }
-                                                        }else{ echo'<li><a href="connexionClient.php" class="btn btn-danger">Connexion</a></li>';}
+                                                        } else {
+                                                            echo '<li><a href="connexionClient.php" class="btn btn-danger">Connexion</a></li>';
+                                                        }
                                                             ?>
 
                                                 </ul>

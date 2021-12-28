@@ -1,7 +1,9 @@
 <?php
 
 session_start();
-
+require_once './admin/config.php';
+//unset($_SESSION['langue']);
+//unset($_SESSION['utilisateur']);
 if(isset($_SESSION['utilisateur'])){
 
     $id_cl = $_SESSION['utilisateur'];
@@ -13,6 +15,14 @@ if(isset($_SESSION['utilisateur'])){
     if($client['langue']=='Français')header('Location:index.php');
 
 }else $_SESSION['langue']='Anglais';
+
+$req = $bdd->prepare('SELECT * from type');
+$req->execute(array());
+$types = $req->fetchall();
+
+$req = $bdd->prepare('SELECT * from type WHERE id_typ=1');
+$req->execute();
+$chambre = $req->fetch();
 ?>
 
 <!doctype html>
@@ -323,32 +333,53 @@ if(isset($_SESSION['utilisateur'])){
                                         <h3>Reservation</h3>
                                     </div>
                                     <div class="booking-form">
-                                        <form action="#">
-                                            <div class="b-date arrive mb-15">
-                                                <label style="color: white;">Arrival date</label>
-                                                <input class="date" type="date" placeholder="">
-                                            </div>
-                                            <div class="b-date departure mb-15">
-                                                <label style="color: white;">Date of departure</label>
-                                                <input class="date" type="date" placeholder="">
-                                            </div>
-                                            <div class="select-book mb-15">
-                                                <select name="book" class="select-booking">
-                                                    <option value="" selected>Adulte</option>
-                                                    <option value="1">Teenager</option>
-                                                    <option value="1">Child</option>
-                                                </select>
-                                            </div>
-                                            <div class="select-book  mb-30">
-                                                <select name="book" class="select-booking">
-                                                    <option value="" selected>Room</option>
-                                                    <option value="1">Roome 101</option>
-                                                    <option value="1">Roome 102</option>
-                                                </select>
-                                            </div>
-                                            <div class="submit-form">
-                                                <button type="submit">Check availability</button>
-                                            </div>
+                                        <form action="resaAjoutIndexang.php" method="POST" class="insert-form" id="formulaire" name="formulaire">
+                                        <div class="b-date arrive mb-15">
+                                            <label style="color: white;">Arrival</label>
+                                            <input class="date" type="date" placeholder="" name="arrive" id="arrive" value="<?php echo date('Y-m-d'); ?>">
+                                        </div>
+                                        <div class="b-date departure mb-15">
+                                            <label style="color: white;">Departure</label>
+                                            <input class="date" type="date" placeholder="" name="depart" id="depart" value="<?php echo date('Y-m-d', strtotime('+1 day')); ?>">
+                                        </div>
+                                        <div class="select-book mb-30">
+                                    <!--<select class="" id="chb_type" name="chb_type" onchange="alert(this.value)">-->
+                                    <select class="select-booking" id="chb_type" name="chb_type">
+                                        <?php
+                                        $chambre_nom = str_replace(' ', '.', $chambre['nom_typ']);
+                                        $chambre_nom_ang = str_replace(' ', '.', $chambre['nom_typ_ang']);
+                                        $option=$chambre['id_typ'] . '|' . $chambre_nom . '|' . $chambre['prix_sem'] . '|' . $chambre['prix_week'] .'|'.$chambre_nom_ang;
+                                        echo "<option value='$option'>Room type</option>";
+                                        
+                                        foreach ($types as $type) {
+                                            $type_nom = str_replace(' ', '.', $type['nom_typ']);
+                                            $type_nom_ang = str_replace(' ', '.', $type['nom_typ_ang']);
+                                            $optionValue=$type['id_typ'] . '|' . $type_nom . '|' . $type['prix_sem'] . '|' . $type['prix_week'] .'|'. $type_nom_ang;
+                                            $optionLabel=$type['nom_typ_ang'];
+                                            echo "<option value='$optionValue'>$optionLabel</option>";
+                                        } ?>
+                                    </select>
+
+                                        </div>
+                                        <div class="select-book  mb-30">
+                                        <select class="select-booking" id="chb_nb" name="chb_nb">
+                                        <option value="1">Room number</option>
+                                        <?php for ($i = 1; $i <= 20; $i++) {
+                                            echo '<option value=' . $i . '>' . $i . '</option>';
+                                        }; ?>
+                                    </select>
+                                        </div>
+                                        <div class="select-book  mb-30">
+                                        <select class="select-booking" id="pers_nb" name="pers_nb">
+                                        <option value="1">Number of people</option>
+                                        <?php for ($i = 1; $i <= 20; $i++) {
+                                            echo '<option value=' . $i . '>' . $i . '</option>';
+                                        }; ?>
+                                    </select>
+                                        </div>
+                                        <div class="submit-form">
+                                            <button type="submit">Reserve</button>
+                                        </div>
                                         </form>
                                     </div>
                                 </div>
@@ -420,7 +451,7 @@ if(isset($_SESSION['utilisateur'])){
                                                 <h3><a href="#" data-toggle="modal" data-target="#roovilla">Family Villa </a></h3>
                                             </div>
                                             <div class="room-rent">
-                                                <h5>125 000 fcfa / <span>on weekend</span></h5>
+                                                <h5>125 000 XOF / <span>on weekend</span></h5>
                                             </div>
                                             <!--
                                         <div class="room-book">
@@ -440,7 +471,7 @@ if(isset($_SESSION['utilisateur'])){
                                                 <h3><a href="#" data-toggle="modal" data-target="#roosui">Suite </a></h3>
                                             </div>
                                             <div class="room-rent">
-                                                <h5>150 000 fcfa / <span> on weekend</span></h5>
+                                                <h5>150 000 XOF / <span> on weekend</span></h5>
                                             </div>
                                             <!--
                                                                     <div class="room-book">
@@ -460,7 +491,7 @@ if(isset($_SESSION['utilisateur'])){
                                                 <h3><a href="#" data-toggle="modal" data-target="#rooclass">Classic rooms </a></h3>
                                             </div>
                                             <div class="room-rent">
-                                                <h5>65 000 fcfa / <span>on working days</span></h5>
+                                                <h5>65 000 XOF / <span>on working days</span></h5>
 
                                             </div>
                                             <!--
@@ -504,7 +535,7 @@ if(isset($_SESSION['utilisateur'])){
                                                         <h3><a href="#" data-toggle="modal" data-target="#roovilla">Classic room 1 </a></h3>
                                                     </div>
                                                     <div class="room-rent">
-                                                        <h5>125 000 fcfa / <span> on working days</span></h5>
+                                                        <h5>125 000 XOF / <span> on working days</span></h5>
                                                     </div>
                                                     <!--
                                                                 <div class="room-book">
@@ -524,7 +555,7 @@ if(isset($_SESSION['utilisateur'])){
                                                         <h3><a href="#" data-toggle="modal" data-target="#roosui">Classic room 2 </a></h3>
                                                     </div>
                                                     <div class="room-rent">
-                                                        <h5>150 000 fcfa / <span>on working days</span></h5>
+                                                        <h5>150 000 XOF / <span>on working days</span></h5>
                                                     </div>
                                                     <!--
                                                                                             <div class="room-book">
@@ -544,7 +575,7 @@ if(isset($_SESSION['utilisateur'])){
                                                         <h3><a href="#" data-toggle="modal" data-target="#rooclass">Classic room 3 </a></h3>
                                                     </div>
                                                     <div class="room-rent">
-                                                        <h5>65 000 fcfa / <span>on working days</span></h5>
+                                                        <h5>65 000 XOF / <span>on working days</span></h5>
 
                                                     </div>
                                                     <!--
@@ -567,7 +598,7 @@ if(isset($_SESSION['utilisateur'])){
                                                         <h3><a href="#" data-toggle="modal" data-target="#rooclass">Classic room 4 </a></h3>
                                                     </div>
                                                     <div class="room-rent">
-                                                        <h5>65 000 fcfa / <span>on working days</span></h5>
+                                                        <h5>65 000 XOF / <span>on working days</span></h5>
 
                                                     </div>
                                                     <!--
@@ -615,7 +646,7 @@ if(isset($_SESSION['utilisateur'])){
                                                         <h3><a href="#" data-toggle="modal" data-target="#roovilla">Suite 1</a></h3>
                                                     </div>
                                                     <div class="room-rent">
-                                                        <h5>125 000 fcfa / <span> on working days </span></h5>
+                                                        <h5>125 000 XOF / <span> on working days </span></h5>
                                                     </div>
                                                     <!--
                                                                 <div class="room-book">
@@ -635,7 +666,7 @@ if(isset($_SESSION['utilisateur'])){
                                                         <h3><a href="#" data-toggle="modal" data-target="#roosui">Suite 2 </a></h3>
                                                     </div>
                                                     <div class="room-rent">
-                                                        <h5>150 000 fcfa / <span> on working days </span></h5>
+                                                        <h5>150 000 XOF / <span> on working days </span></h5>
                                                     </div>
                                                     <!--
                                                                                             <div class="room-book">
@@ -655,7 +686,7 @@ if(isset($_SESSION['utilisateur'])){
                                                         <h3><a href="#" data-toggle="modal" data-target="#rooclass">Suite 3 </a></h3>
                                                     </div>
                                                     <div class="room-rent">
-                                                        <h5>65 000 fcfa / <span> on working days </span></h5>
+                                                        <h5>65 000 XOF / <span> on working days </span></h5>
 
                                                     </div>
                                                     <!--
@@ -678,7 +709,7 @@ if(isset($_SESSION['utilisateur'])){
                                                         <h3><a href="#" data-toggle="modal" data-target="#rooclass">Suite 4 </a></h3>
                                                     </div>
                                                     <div class="room-rent">
-                                                        <h5>65 000 fcfa / <span>on working days</span></h5>
+                                                        <h5>65 000 XOF / <span>on working days</span></h5>
 
                                                     </div>
                                                     <!--
@@ -726,7 +757,7 @@ if(isset($_SESSION['utilisateur'])){
                                                         <h3><a href="#" data-toggle="modal" data-target="#roovilla">Family villa 1 </a></h3>
                                                     </div>
                                                     <div class="room-rent">
-                                                        <h5>125 000 fcfa / <span> on working days </span></h5>
+                                                        <h5>125 000 XOF / <span> on working days </span></h5>
                                                     </div>
                                                     <!--
                                                                                         <div class="room-book">
@@ -746,7 +777,7 @@ if(isset($_SESSION['utilisateur'])){
                                                         <h3><a href="#" data-toggle="modal" data-target="#roosui">Family villa 2 </a></h3>
                                                     </div>
                                                     <div class="room-rent">
-                                                        <h5>150 000 fcfa / <span> on working days </span></h5>
+                                                        <h5>150 000 XOF / <span> on working days </span></h5>
                                                     </div>
                                                     <!--
                                                                                                                     <div class="room-book">
@@ -766,7 +797,7 @@ if(isset($_SESSION['utilisateur'])){
                                                         <h3><a href="#" data-toggle="modal" data-target="#rooclass">Family villa 3 </a></h3>
                                                     </div>
                                                     <div class="room-rent">
-                                                        <h5>65 000 fcfa / <span> on working days </span></h5>
+                                                        <h5>65 000 XOF / <span> on working days </span></h5>
 
                                                     </div>
                                                     <!--
@@ -789,7 +820,7 @@ if(isset($_SESSION['utilisateur'])){
                                                         <h3><a href="#" data-toggle="modal" data-target="#rooclass">Family villa 4 </a></h3>
                                                     </div>
                                                     <div class="room-rent">
-                                                        <h5>65 000 fcfa / <span> on working days</span></h5>
+                                                        <h5>65 000 XOF / <span> on working days</span></h5>
 
                                                     </div>
                                                     <!--

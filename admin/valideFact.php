@@ -26,6 +26,7 @@ if (isset($_POST['valide'])) {
     $check->execute(array($id_cl, $id_fact));
     $fact = $check->fetch();
 
+    if($client['langue']=='Français'){
     $body = [
         'Messages' => [
             [
@@ -41,7 +42,7 @@ if (isset($_POST['valide'])) {
                 ],
                 'Subject' => "Réservation Villa Blanca",
                 'TextPart' => "Passer au règlement",
-                'HTMLPart' => "<h3>Bonjour " . $client['civilite_cl'] . " " . $client['nom_cl'] . " votre réservation n° " . $fact['id_fact'] . " du " . date("d/m/Y H:i:s", strtotime($fact['date_fact'])) . " s'élevant à " . number_format($fact['montant'], 0, ',', ' ') . " Fcfa a été confirmé, merci de bien vouloir passer au payement via votre interface client du site.</h3><br />Merci et bon séjour à la villa blanca",
+                'HTMLPart' => "<h3>Bonjour " . $client['civilite_cl'] . " " . $client['nom_cl'] . " votre réservation n° " . $fact['id_fact'] . " du " . date("d/m/Y H:i:s", strtotime($fact['date_fact'])) . " s'élevant à " . number_format($fact['montant'], 0, ',', ' ') . " Fcfa a été confirmé, merci de bien vouloir passer au payement via votre interface client du site ou cliquez sur le lien http://localhost:8888/villa/payConnectCl.php?token=".$client['token'].".</h3><br />Merci et bon séjour à la villa blanca.",
                 'CustomID' => "AppGettingStartedTest",
             ],
         ],
@@ -50,6 +51,32 @@ if (isset($_POST['valide'])) {
     //$response->success() && var_dump($response->getData());
 
     header('Location: facture.php');
+    }else{
+    $body = [
+        'Messages' => [
+            [
+                'From' => [
+                    'Email' => "adjoua94@gmail.com",
+                    'Name' => "Villa Blanca",
+                ],
+                'To' => [
+                    [
+                        'Email' => $client['email'],
+                        'Name' => $client['prenom_cl'],
+                    ],
+                ],
+                'Subject' => "Villa Blanca reservation",
+                'TextPart' => "Proceed to payment",
+                'HTMLPart' => "<h3>Hello " . $client['civilite_cl'] . " " . $client['nom_cl'] . " your reservation n° " . $fact['id_fact'] . " of " . date("d/m/Y H:i:s", strtotime($fact['date_fact'])) . " amounting to " . number_format($fact['montant'], 0, ',', ' ') . " XOF has been confirmed, please proceed to payment via your client interface on the site or click on the link http://localhost:8888/villa/payConnectCl.php?token=".$client['token'].".</h3><br />Thank you and have a nice stay at villa blanca.",
+                'CustomID' => "AppGettingStartedTest",
+            ],
+        ],
+    ];
+    $response = $mj->post(Resources::$Email, ['body' => $body]);
+    //$response->success() && var_dump($response->getData());
+
+    header('Location: facture.php');
+    }
 }
 if (isset($_POST['annule'])) {
     $id_fact = $_POST['fact'];
@@ -63,6 +90,7 @@ if (isset($_POST['annule'])) {
     $check->execute(array($id_cl, $id_fact));
     $fact = $check->fetch();
 
+    if($client['langue']=='Français'){
     $body = [
         'Messages' => [
             [
@@ -78,7 +106,7 @@ if (isset($_POST['annule'])) {
                 ],
                 'Subject' => "Réservation Villa Blanca",
                 'TextPart' => "Passer au règlement",
-                'HTMLPart' => "<h3>Bonjour " . $client['civilite_cl'] . " " . $client['nom_cl'] . " votre réservation n° " . $fact['id_fact'] . " du " . date("d/m/Y H:i:s", strtotime($fact['date_fact'])) . " s'élevant à " . number_format($fact['montant'], 0, ',', ' ') . " Fcfa annulé, merci désolé pour les désagréments occasionnés.</h3><br />La villa blanca",
+                'HTMLPart' => "<h3>Bonjour " . $client['civilite_cl'] . " " . $client['nom_cl'] . " votre réservation n° " . $fact['id_fact'] . " du " . date("d/m/Y H:i:s", strtotime($fact['date_fact'])) . " s'élevant à " . number_format($fact['montant'], 0, ',', ' ') . " Fcfa a été annulé, merci et désolé pour les désagréments occasionnés.</h3><br />La villa blanca.",
                 'CustomID' => "AppGettingStartedTest",
             ],
         ],
@@ -92,6 +120,37 @@ if (isset($_POST['annule'])) {
     $sup->execute(array($id_cl, $id_fact));
 
     header('Location: facture.php');
+    }else{
+    $body = [
+        'Messages' => [
+            [
+                'From' => [
+                    'Email' => "adjoua94@gmail.com",
+                    'Name' => "Villa Blanca",
+                ],
+                'To' => [
+                    [
+                        'Email' => $client['email'],
+                        'Name' => $client['prenom_cl'],
+                    ],
+                ],
+                'Subject' => "Réservation Villa Blanca",
+                'TextPart' => "Passer au règlement",
+                'HTMLPart' => "<h3>Hello " . $client['civilite_cl'] . " " . $client['nom_cl'] . " your reservation n° " . $fact['id_fact'] . " of " . date("d/m/Y H:i:s", strtotime($fact['date_fact'])) . " amounting to " . number_format($fact['montant'], 0, ',', ' ') . " XOF has been canceled, thank you and sorry for the inconvenience caused.</h3><br />La villa blanca.",
+                'CustomID' => "AppGettingStartedTest",
+            ],
+        ],
+    ];
+    $response = $mj->post(Resources::$Email, ['body' => $body]);
+    //$response->success() && var_dump($response->getData());
+
+    $req = $bdd->prepare('DELETE FROM facture WHERE id_cl = ? AND id_fact = ?');
+    $req->execute(array($id_cl, $id_fact));
+    $sup = $bdd->prepare('DELETE FROM reservation WHERE id_cl = ? AND id_fact = ?');
+    $sup->execute(array($id_cl, $id_fact));
+
+    header('Location: facture.php');
+}
 }
 if (isset($_POST['supprime'])) {
     $id_fact = $_POST['fact'];

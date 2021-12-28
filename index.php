@@ -1,6 +1,9 @@
 <?php
 session_start();
+require_once './admin/config.php';
 
+//unset($_SESSION['langue']);
+//unset($_SESSION['utilisateur']);
 if(isset($_SESSION['utilisateur'])){
 
     $id_cl = $_SESSION['utilisateur'];
@@ -12,6 +15,14 @@ if(isset($_SESSION['utilisateur'])){
     if($client['langue']=='Anglais')header('Location:indexang.php');
 
 }else $_SESSION['langue']='Français';
+
+$req = $bdd->prepare('SELECT * from type');
+$req->execute(array());
+$types = $req->fetchall();
+
+$req = $bdd->prepare('SELECT * from type WHERE id_typ=1');
+$req->execute();
+$chambre = $req->fetch();
 ?>
 
 <!doctype html>
@@ -316,31 +327,50 @@ if(isset($_SESSION['utilisateur'])){
                                     <h3>Reservation</h3>
                                 </div>
                                 <div class="booking-form">
-                                    <form action="#">
+                                    <form action="resaAjoutIndex.php" method="POST" class="insert-form" id="formulaire" name="formulaire">
                                         <div class="b-date arrive mb-15">
                                             <label style="color: white;">Date arrivée</label>
-                                            <input class="date" type="date" placeholder="">
+                                            <input class="date" type="date" placeholder="" name="arrive" id="arrive" value="<?php echo date('Y-m-d'); ?>">
                                         </div>
                                         <div class="b-date departure mb-15">
                                             <label style="color: white;">Date de départ</label>
-                                            <input class="date" type="date" placeholder="">
+                                            <input class="date" type="date" placeholder="" name="depart" id="depart" value="<?php echo date('Y-m-d', strtotime('+1 day')); ?>">
                                         </div>
-                                        <div class="select-book mb-15">
-                                            <select name="book" class="select-booking">
-                                                <option value="" selected>Adulte</option>
-                                                <option value="1">Adolescent(e)</option>
-                                                <option value="1">Enfant</option>
-                                            </select>
+                                        <div class="select-book mb-30">
+                                    <!--<select class="" id="chb_type" name="chb_type" onchange="alert(this.value)">-->
+                                    <select class="select-booking" id="chb_type" name="chb_type">
+                                        <?php
+                                        $chambre_nom = str_replace(' ', '.', $chambre['nom_typ']);
+                                        $option=$chambre['id_typ'] . '|' . $chambre_nom . '|' . $chambre['prix_sem'] . '|' . $chambre['prix_week'];
+                                    echo "<option value='$option'>Type de chambre</option>";
+                                        
+                                        foreach ($types as $type) {
+                                            $type_nom = str_replace(' ', '.', $type['nom_typ']);
+                                            $optionValue=$type['id_typ'] . '|' . $type_nom . '|' . $type['prix_sem'] . '|' . $type['prix_week'];
+                                            $optionLabel=$type['nom_typ'];
+                                            echo "<option value='$optionValue'>$optionLabel</option>";
+                                        } ?>
+                                    </select>
+
                                         </div>
                                         <div class="select-book  mb-30">
-                                            <select name="book" class="select-booking">
-                                                <option value="" selected>Salle</option>
-                                                <option value="1">Roome 101</option>
-                                                <option value="1">Roome 102</option>
-                                            </select>
+                                        <select class="select-booking" id="chb_nb" name="chb_nb">
+                                        <option value="1">Nombre de chambre</option>
+                                        <?php for ($i = 1; $i <= 20; $i++) {
+                                            echo '<option value=' . $i . '>' . $i . '</option>';
+                                        }; ?>
+                                    </select>
+                                        </div>
+                                        <div class="select-book  mb-30">
+                                        <select class="select-booking" id="pers_nb" name="pers_nb">
+                                        <option value="1">Nombre de personne</option>
+                                        <?php for ($i = 1; $i <= 20; $i++) {
+                                            echo '<option value=' . $i . '>' . $i . '</option>';
+                                        }; ?>
+                                    </select>
                                         </div>
                                         <div class="submit-form">
-                                            <button type="submit">Voir les disponibilités</button>
+                                            <button type="submit">Réserver</button>
                                         </div>
                                     </form>
                                 </div>
@@ -626,3 +656,4 @@ if(isset($_SESSION['utilisateur'])){
 </body>
 
 </html>
+

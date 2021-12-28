@@ -105,6 +105,7 @@ $cl_table = '<table class="table table-bordered" style="margin:10px 150px 10px 1
 <th scope="col">Prénom</th>
 <th scope="col">Email</th>
 <th scope="col">Contact</th>
+<th scope="col">Langue</th>
 </tr>
 </thead>
 <tbody>';
@@ -116,6 +117,7 @@ $cl_table .= '
 <td>' . $client['prenom_cl'] . '</td>
 <td>' . $client['email'] . '</td>
 <td>' . $client['tel_cl'] . '</td>
+<td>' . $client['langue'] . '</td>
 </tr>';
 
 $cl_table .= '</tbody>
@@ -141,8 +143,10 @@ $html = '<table class="table table-bordered" style="margin:10px 150px 10px 110px
 
 if ($facture['statut'] == 0) {
     $statut = '<div style="color:red">En attente</div>';
-} else {
+} elseif ($facture['statut'] == 1) {
     $statut = '<div style="color:green">Réservé</div>';
+} else {
+    $statut = '<div style="color:black">Annulé</div>';
 }
 
 if ($facture['paye'] == 0) {
