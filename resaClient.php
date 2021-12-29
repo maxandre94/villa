@@ -20,7 +20,9 @@ $req = $bdd->prepare('SELECT * FROM facture WHERE id_cl=? AND statut IN (0,1) OR
 $req->execute(array($id_cl));
 $factures = $req->fetchAll();
 
-
+$req = $bdd->prepare('SELECT * FROM facture WHERE id_cl=? AND statut = 0');
+$req->execute(array($id_cl));
+$compt = $req->rowCount();
 
 ?>
 
@@ -285,13 +287,14 @@ $factures = $req->fetchAll();
                 <div class="row">
                     <div class="col-md-12">
                         <div class="section-title mb-50">
-                        <div class="alert alert-success" role="alert">
+                            <?php if($compt>0){
+                        echo '<div class="alert alert-success" role="alert">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
     <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
   </svg>
   <h4 class="alert-heading">Merci d’avoir contacté la VILLA BLANCA.</h4>
   <p class="mb-0">Nous regardons la disponibilité de votre réservation et nous vous recontactons dans moins de 30 Min.</p>
-</div>
+</div>';}?>
                             <h2>
                                 <h1 style="font-family: 'Reggae One', cursive;">Factures</h1>
                             </h2>
@@ -323,7 +326,7 @@ $factures = $req->fetchAll();
                     if ($facture['statut'] == 0) {
                         $statut = '<div style="color:red">En attente</div>';
                     } else {
-                        $statut = '<form action="cinetpay/index.php" method="post" id="formulaire"
+                        $statut = '<form action="cinetpay-sdk-php/index.php" method="post" id="formulaire"
         name="formulaire"><input class="btn btn-success" type="submit"
         name="payement" id="add" value="Passer au payement"><input type="hidden" name="fact" value=' . $facture['id_fact'] . '><input type="hidden" name="cl" value=' . $facture['id_cl'] . '></form>';
                     }

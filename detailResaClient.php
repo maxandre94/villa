@@ -351,7 +351,7 @@ function ResaSpitPeriod($date_debut, $date_fin)
                     if ($facture['statut'] == 0) {
                         $statut = '<div style="color:red">En attente</div>';
                     } else {
-                        $statut = '<form action="reglement.php#section4" method="post" id="formulaire"
+                        $statut = '<form action="cinetpay-sdk-php/index.php" method="post" id="formulaire"
     name="formulaire"><input class="btn btn-success" type="submit"
     name="payement" id="add" value="Passer au payement"><input type="hidden" name="fact" value=' . $facture['id_fact'] . '><input type="hidden" name="cl" value=' . $facture['id_cl'] . '></form>';
                     }
