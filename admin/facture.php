@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'config.php'; // ajout connexion bdd
+require_once '../connection.php'; // ajout connexion bdd
 // si la session existe pas soit si l'on est pas connecté on redirige
 if (!isset($_SESSION['user'])) {
     header('Location:index.php');
@@ -9,7 +9,7 @@ if (!isset($_SESSION['user'])) {
 
 // On récupere les données de l'utilisateur
 $req = $bdd->prepare('SELECT * FROM utilisateurs WHERE token = ?');
-$req->execute(array($_SESSION['user']));
+$req->execute([$_SESSION['user']]);
 $data = $req->fetch();
 
 $req = $bdd->prepare('SELECT * FROM facture ORDER BY date_fact DESC, paye ASC');
@@ -50,10 +50,9 @@ $html = '<table class="table table-bordered" style="margin:10px 150px 10px 110px
 
 $i = 1;
 foreach ($factures as $facture) {
-
     $detail = '<form action="detailFact.php" method="post" id="formulaire"
     name="formulaire"><input class="btn btn-secondary" type="submit"
-    name="detail" id="add" value="Details"><input type="hidden" name="fact" value=' . $facture['id_fact'] . '><input type="hidden" name="cl" value=' . $facture['id_cl'] . '></form>';
+    name="detail" id="add" value="Details"><input type="hidden" name="fact" value='.$facture['id_fact'].'><input type="hidden" name="cl" value='.$facture['id_cl'].'></form>';
     if ($facture['statut'] == 0) {
         $statut = '<div style="color:red">En attente</div>';
     } elseif ($facture['statut'] == 1) {
@@ -70,14 +69,14 @@ foreach ($factures as $facture) {
 
     $html .= '
 <tr>
-<td>' . $facture['id_fact'] . '</td>
-<td>' . date("d/m/Y H:i:s", strtotime($facture['date_fact'])) . '</td>
-<td>' . number_format($facture['montant'], 0, ',', ' ') . ' </td>
-<td>' . $paye . '</td>
-<td>' . $statut . '</td>
-<td>' . $detail . '</td>
+<td>'.$facture['id_fact'].'</td>
+<td>'.date('d/m/Y H:i:s', strtotime($facture['date_fact'])).'</td>
+<td>'.number_format($facture['montant'], 0, ',', ' ').' </td>
+<td>'.$paye.'</td>
+<td>'.$statut.'</td>
+<td>'.$detail.'</td>
 </tr>';
-    $i++;
+    ++$i;
 }
 
 $html .= '</tbody>

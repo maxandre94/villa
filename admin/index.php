@@ -51,6 +51,14 @@ break;
         </div>
         <?php
 break;
+
+case 'success':
+    ?>
+<div class="alert alert-success">
+    <strong>Succès</strong> inscription réussie !
+</div>
+<?php
+break;
     }
 }
 ?>
