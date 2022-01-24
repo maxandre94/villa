@@ -1,10 +1,8 @@
 <?php
 session_start();
 //require_once '../connection.php';
-if (isset($_SESSION['resa'])) {
-    $_resa = $_SESSION['resa'];
-} else {
-    $_resa = [];
+if (isset($_SESSION['utilisateur'])) {
+    header('Location: ./');
 }
 //print_r($_resa);
 
@@ -22,7 +20,7 @@ require_once '../connection.php';
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Villa blanca | Restaurants_bars</title>
+    <title>Villa blanca | Réservation</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -173,12 +171,45 @@ require_once '../connection.php';
                 <div class="mobile-menu-area hidden-lg hidden-md">
                     <div class="container">
                         <div class="col-md-12">
-                            <nav id="dropdown">
+                            <nav>
                                 <ul>
-                                    <li><a href="../chambre">Chambres</a></li>
-                                    <li><a href="../seminaire">Séminaires</a></li>
-                                    <li><a href="../restaurant">Restaurant</a></li>
-                                    <li><a href="../loisir">Nos loisirs</a></li>
+                                <li><a href="../chambre" style="color:white">Chambres</a></li>
+                                                    <li><a href="../seminaire" style="color:white">Séminaires</a></li>
+                                                    <li><a href="../restaurant" style="color:white">Restaurant</a></li>
+                                                    <li><a href="../loisir" style="color:white">Nos loisirs</a></li>
+                                                    <li><a href="./" style="color:red">Reservation</a></li>
+                                                    <?php if (isset($_SESSION['utilisateur'])) {
+    $req = $bdd->prepare('SELECT * FROM facture WHERE id_cl=?');
+    $req->execute([$_SESSION['utilisateur']]);
+    $facts = $req->fetchAll();
+    $rowN = 0;
+    $row = 0;
+    foreach ($facts as $fact) {
+        if ($fact['statut'] == 0) {
+            ++$rowN;
+        }
+        if ($fact['statut'] == 1) {
+            ++$row;
+        }
+    }
+    if ($row == 0 && $rowN != 0) {
+        echo '<li><span class="badge badge-warning" id="lblCartCounts">'.$rowN.'</span><a href="resaClient.php" style="color:white">Mes réservations</a>
+                                                            <a href="resaClient.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a></li>';
+    }
+    if ($row != 0 && $rowN == 0) {
+        echo '<li><a href="resaClient.php" style="color:white">Mes réservations</a>
+                                                            <a href="resaClient.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                            <span class="badge badge-warning" id="lblCartCount">'.$row.'</span></li>';
+    }
+    if ($row != 0 && $rowN != 0) {
+        echo '<li><span class="badge badge-warning" id="lblCartCounts">'.$rowN.'</span><a href="resaClient.php" style="color:white">Mes réservations</a>
+                                                            <a href="resaClient.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                            <span class="badge badge-warning" id="lblCartCount">'.$row.'</span></li>';
+    }
+} else {
+    echo '<li><a href="connexionClient.php" style="color:white">Connexion</a></li>';
+}
+                                                    ?>
                                 </ul>
                             </nav>
                         </div>
@@ -292,7 +323,7 @@ require_once '../connection.php';
                             <hr>
                             <!-- FIN en tête -->
 
-
+                            Avez-vous un compte ? <a href="infoclConnexion.php#section3"> Connectez-vous </a>
                             <div class="login-form">
                                 <?php
                                 if (isset($_GET['reg_err'])) {
@@ -306,6 +337,14 @@ require_once '../connection.php';
                                             </div>
                                         <?php
                                             break;*/
+
+                                            case 'email':
+                                                ?>
+                                                                    <div class="alert alert-danger">
+                                                                        <strong>Erreur</strong> email Non conforme.
+                                                                    </div>
+                                                                    <?php
+                                            break;
 
                                             case 'pay_length':
                                                 ?>
@@ -393,33 +432,162 @@ require_once '../connection.php';
                                                 <strong>Erreur</strong> nom trop long.
                                             </div>
                                 <?php
-
+break;
                                     }
                                 }
                                 ?>
 
+<?php
+if(isset($_SESSION['tab'])){
+    $tab=$_SESSION['tab'];
+    if($tab[0]==='Mr')$civilite='Monsieur';
+    if($tab[0]==='Mme')$civilite='Madame';
+    if($tab[0]==='Mlle')$civilite='Mademoiselle';
+    $nom=$tab[1];
+    $prenom=$tab[2];
+    $contact=$tab[3];
+    $adress=$tab[4];
+    $etat=$tab[6];
+    $ville=$tab[7];
+    $cp=$tab[8];
+    $email=$tab[9];
+}else{
+    $civilite='Monsieur';
+    $nom='';
+    $prenom='';
+    $contact='';
+    $adress='';
+    $etat='';
+    $ville='';
+    $cp='';
+    $email='';
+}
+
+if($civilite==='Monsieur'){
+    $htmlCivilite='<div class="form-group">
+    <select class="form-control" name="civilite">
+        <option value="Mr">Monsieur</option>
+        <option value="Mme">Madame</option>
+        <option value="Mlle">Mademoiselle</option>
+    </select>
+</div>';
+}
+if($civilite==='Madame'){
+    $htmlCivilite='<div class="form-group">
+    <select class="form-control" name="civilite">
+        <option value="Mr">Monsieur</option>
+        <option value="Mme" selected>Madame</option>
+        <option value="Mlle">Mademoiselle</option>
+    </select>
+</div>';
+}
+if($civilite=='=Mademoiselle'){
+    $htmlCivilite='<div class="form-group">
+    <select class="form-control" name="civilite">
+        <option value="Mr">Monsieur</option>
+        <option value="Mme">Madame</option>
+        <option value="Mlle" selected>Mademoiselle</option>
+    </select>
+</div>';
+}
+if($nom===''){
+    $htmlNom='<div class="form-group">
+    <input type="text" name="nom" class="form-control" placeholder="Nom"
+        required="required"  >
+</div>';
+}else{
+    $htmlNom='<div class="form-group">
+    <input type="text" name="nom" class="form-control" placeholder="Nom"
+        required="required"   value='.$nom.'>
+</div>';
+}
+if($prenom===''){
+    $htmlPrenom='<div class="form-group">
+    <input type="text" name="pren" class="form-control" placeholder="Prénoms"
+        required="required"  >
+</div>';
+}else{
+    $htmlPrenom='<div class="form-group">
+    <input type="text" name="pren" class="form-control" placeholder="Prénoms"
+        required="required"   value='.$prenom.'>
+</div>';
+}
+if($contact===''){
+    $htmlContact='<div class="form-group">
+    <input type="text" name="tel" class="form-control" placeholder="Contact"
+        required="required"  >
+</div>';
+}else{
+    $htmlContact='<div class="form-group">
+    <input type="text" name="tel" class="form-control" placeholder="Contact"
+        required="required"   value='.$contact.'>
+</div>';
+}
+if($adress===''){
+    $htmlAdress='<div class="form-group">
+    <input type="text" name="adress" class="form-control" placeholder="Addresse"
+        required="required"  >
+</div>';
+}else{
+    $htmlAdress='<div class="form-group">
+    <input type="text" name="adress" class="form-control" placeholder="Addresse"
+        required="required"   value='.$adress.'>
+</div>';
+}
+if($etat===''){
+    $htmlEtat='<div class="form-group">
+    <input type="text" name="etat" class="form-control" placeholder="Etat (EX: AZ) pour les états fédéraux"
+         >
+</div>';
+}else{
+    $htmlEtat='<div class="form-group">
+    <input type="text" name="etat" class="form-control" placeholder="Etat (EX: AZ) pour les états fédéraux"
+          value='.$etat.'>
+</div>';
+}
+if($ville===''){
+    $htmlVille='<div class="form-group">
+    <input type="text" name="ville" class="form-control" placeholder="Ville"
+        required="required"  >
+</div>';
+}else{
+    $htmlVille='<div class="form-group">
+    <input type="text" name="ville" class="form-control" placeholder="Ville"
+        required="required"   value='.$ville.'>
+</div>';
+}
+if($cp===''){
+    $htmlCp='<div class="form-group">
+    <input type="text" name="cp" class="form-control" placeholder="Code postal (Ex : 225)"
+        required="required"  >
+</div>';
+}else{
+    $htmlCp='<div class="form-group">
+    <input type="text" name="cp" class="form-control" placeholder="Code postal (Ex : 225)"
+        required="required"   value='.$cp.'>
+</div>';
+}
+if($email===''){
+    $htmlEmail='<div class="form-group">
+    <input type="email" name="email" class="form-control" placeholder="Email"
+        required="required"  >
+</div>';
+}else{
+    $htmlEmail='<div class="form-group">
+    <input type="email" name="email" class="form-control" placeholder="Email"
+        required="required"   value='.$email.'>
+</div>';
+}
+?>
                                 <form method="post" action="infotraitement.php">
                                     <h2 class="text-center">Inscription</h2>
-                                    <div class="form-group">
-                                        <select class="form-control" id="chb_type" name="civilite">
-                                            <option value="Mr">Monsieur</option>
-                                            <option value="Mme">Madame</option>
-                                            <option value="Mlle">Mademoiselle</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" name="nom" class="form-control" placeholder="Nom" required="required" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" name="pren" class="form-control" placeholder="Prénom" required="required" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" name="tel" class="form-control" placeholder="Contact" required="required" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" name="adress" class="form-control" placeholder="Address"
-                                            required="required" autocomplete="off">
-                                    </div>
+                                    <?php 
+                                        echo $htmlCivilite; 
+                                        echo $htmlNom;
+                                        echo $htmlPrenom;
+                                        echo $htmlContact;
+                                        echo $htmlAdress;
+                                    ?>
 
                                     <div class="form-group">
                                     <select class="form-control" name="pays" >
@@ -483,7 +651,7 @@ require_once '../connection.php';
 <option value="191;HR;HRV;Croatie">Croatie</option>
 <option value="192;CU;CUB;Cuba">Cuba</option>
 <option value="531;CW;CUW;Curaçao">Curaçao</option>
-<option value="384;CI;CIV;Côte d'Ivoire">Côte d'Ivoire</option>
+<option value="384;CI;CIV;Côte d'Ivoire" selected>Côte d'Ivoire</option>
 <option value="208;DK;DNK;Danemark">Danemark</option>
 <option value="262;DJ;DJI;Djibouti">Djibouti</option>
 <option value="214;DO;DOM;dominicaine (République)">dominicaine (République)</option>
@@ -676,26 +844,17 @@ require_once '../connection.php';
 </select>
 </div>
 
+<?php
+                                        echo $htmlEtat;
+                                        echo $htmlVille;
+                                        echo $htmlCp;
+                                        echo $htmlEmail;
+                                    ?>
                                     <div class="form-group">
-                                        <input type="text" name="etat" class="form-control" placeholder="Etat (EX: AZ) pour les états fédéraux"
-                                            autocomplete="off">
+                                        <input type="password" name="password" class="form-control" placeholder="Mot de passe" required="required"  >
                                     </div>
                                     <div class="form-group">
-                                        <input type="text" name="ville" class="form-control" placeholder="Ville"
-                                            required="required" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" name="cp" class="form-control" placeholder="Code postal (Ex : 225)"
-                                            required="required" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="email" name="email" class="form-control" placeholder="Email" required="required" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="password" name="password" class="form-control" placeholder="Mot de passe" required="required" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="password" name="password_retype" class="form-control" placeholder="Re-tapez le mot de passe" required="required" autocomplete="off">
+                                        <input type="password" name="password_retype" class="form-control" placeholder="Re-tapez le mot de passe" required="required"  >
                                     </div>
                                     <div class="form-group">
                                         <input type="submit" class="btn btn-primary btn-lg" name="ok" value="Inscription" />
@@ -703,7 +862,7 @@ require_once '../connection.php';
                                 </form>
                             </div>
                         </div>
-                        Avez-vous un compte ? <a href="infoclConnexion.php#section3"> Connectez-vous </a>
+                        
                     </div>
                     <style>
                         .login-form {

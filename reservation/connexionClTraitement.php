@@ -2,13 +2,13 @@
 
 session_start(); // Démarrage de la session
 require_once '../connection.php';
+require 'vendor/autoload.php';
+use Mailjet\Resources;
+
+$mj = new \Mailjet\Client('f1deb41cfc24416451ff78904b822e7c', '1b1d77e7cfff983b5417433d2d332dd6', true, ['version' => 'v3.1']);
 
 // On inclut la connexion à la base de données
-if (isset($_SESSION['resa'])) {
-    $_resa = $_SESSION['resa'];
-} else {
-    $_resa = [];
-}
+
 try {
     if (!empty($_POST['email']) && !empty($_POST['password'])) { // Si il existe les champs email, password et qu'il sont pas vident
         // Patch XSS
@@ -34,6 +34,52 @@ try {
                     header('Location: ./');
                     die();
                 } else {
+                    if ($data['langue'] == 'Français') {
+                        $body = [
+                        'Messages' => [
+                            [
+                                'From' => [
+                                    'Email' => 'adjoua94@gmail.com',
+                                    'Name' => 'Villa Blanca',
+                                ],
+                                'To' => [
+                                    [
+                                        'Email' => $data['email'],
+                                        'Name' => $data['prenom_cl'],
+                                    ],
+                                ],
+                                'Subject' => 'Mot de passe oublié Villa Blanca',
+                                'TextPart' => 'Réinitialisation de mot de passe',
+                                'HTMLPart' => '<h3>Bonjour '.$data['civilite_cl'].' '.mb_strtoupper($data['nom_cl']).' '.$data['prenom_cl'].' veuillez cliquer sur le lien suivant pour réinitialiser votre mot de passe https://villablanca.ci/reservation/mp.php?token='.$data['token'].'.</h3><br />Merci et bon séjour à la villa blanca.',
+                                'CustomID' => 'AppGettingStartedTest',
+                            ],
+                        ],
+                    ];
+                        $response = $mj->post(Resources::$Email, ['body' => $body]);
+                    }else {
+                        $body = [
+                        'Messages' => [
+                            [
+                                'From' => [
+                                    'Email' => 'adjoua94@gmail.com',
+                                    'Name' => 'Villa Blanca',
+                                ],
+                                'To' => [
+                                    [
+                                        'Email' => $data['email'],
+                                        'Name' => $data['prenom_cl'],
+                                    ],
+                                ],
+                                'Subject' => 'Villa Blanca reservation',
+                                'TextPart' => 'Proceed to payment',
+                                'HTMLPart' => '<h3>Hello '.$data['civilite_cl'].' '.mb_strtoupper($data['nom_cl']).' please click on the following link to reset your password https://villablanca.ci/reservation/mp.php?token='.$data['token'].'.</h3><br />Thank you and have a nice stay at villa blanca.',
+                                'CustomID' => 'AppGettingStartedTest',
+                            ],
+                        ],
+                    ];
+                        $response = $mj->post(Resources::$Email, ['body' => $body]);
+                    }
+
                     header('Location: connexionClient.php?login_err=password');
                     die();
                 }

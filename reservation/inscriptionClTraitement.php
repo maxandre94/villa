@@ -1,11 +1,6 @@
 <?php
 
 session_start();
-if (isset($_SESSION['resa'])) {
-    $_resa = $_SESSION['resa'];
-} else {
-    $_resa = [];
-}
 
 require_once '../connection.php';
 try {
@@ -32,6 +27,7 @@ try {
         } else {
             $etat = '';
         }
+        $_SESSION['tab']=[$civilite,$nom,$pren,$tel,$adress,$pays,$etat,$ville,$cp,$email];
         // On vérifie si l'utilisateur existe
         /*$check = $bdd->prepare('SELECT nom_cl, prenom_cl, email, tel_cl FROM client WHERE email = ?');
         $check->execute(array($email));
@@ -70,23 +66,26 @@ try {
                                                             $token = bin2hex(openssl_random_pseudo_bytes(64));
                                                             $cost = ['cost' => 12];
                                                             $password = password_hash($password, PASSWORD_BCRYPT, $cost);
-                                                            $query = "INSERT INTO client (adress, pays, etat, ville, code_pos, langue, civilite_cl, nom_cl, prenom_cl, email, mot_pas, tel_cl, token) 
-      	    	  VALUES ('$adress', '$code_pay', '$etat', '$ville', '$cp', '$langue', '$civilite', '$nom', '$pren', '$email', '$password', '$tel', '$token')";
+                                                            $query = $bdd->prepare("INSERT INTO client (adress, pays, etat, ville, code_pos, langue, civilite_cl, nom_cl, prenom_cl, email, mot_pas, tel_cl, adress, pays, etat, ville, code_pos, token)
+      	    	  VALUES ('$adress', '$code_pay', '$etat', '$ville', '$cp', '$langue', '$civilite', '$nom', '$pren', '$email', '$password', '$tel', '$adress', '$code_pay', '$etat', '$ville', '$cp', '$token')");
                                                             $res = $bdd->prepare($query);
                                                             $exec = $res->execute();
 
                                                             $_SESSION['utilisateur'] = $data['id_cl'];
                                                             unset($_SESSION['resa']);
                                                             unset($_SESSION['langue']);
+                                                            unset($_SESSION['tab']);
 
                                                             // On redirige avec le message de succès
                                                             header('Location:connexionClient.php');
                                                             die();
-                                                        }
+                                                        
                                                     } else {
                                                         header('Location: inscriptionClient.php?reg_err=password');
                                                         die();
                                                     }
+                                                } else{header('Location: inscriptionClient.php?reg_err=email');
+                                                    die();}
                                                 } else {
                                                     header('Location: inscriptionClient.php?reg_err=tel');
                                                     die();

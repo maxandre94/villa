@@ -149,7 +149,7 @@
                                                                                                                                     </li>
                                                                                                                                 </ul>
                                                                                                                             </li>-->
-                                                    <li><a href="./">Chambres</a></li>
+                                                    <li><a href="./" class="btn btn-danger">Chambres</a></li>
                                                     <li><a href="../seminaire">Séminaires</a></li>
                                                     <li><a href="../restaurant">Restaurant</a></li>
                                                     <li><a href="../loisir">Nos loisirs</a></li>
@@ -186,7 +186,7 @@
                 <div class="mobile-menu-area hidden-lg hidden-md">
                     <div class="container">
                         <div class="col-md-12">
-                            <nav id="dropdown">
+                            <nav>
                                 <ul>
                                     <!--Header section accueil
                                                                                                         <li><a href="#">Accueil</a>
@@ -245,10 +245,11 @@
                                                                                                         </li>
                                                                                                         -->
 
-                                    <li><a href="./">Chambres</a></li>
-                                    <li><a href="../seminaire">Séminaires</a></li>
-                                    <li><a href="../restaurant">Restaurant</a></li>
-                                    <li><a href="../loisir">Nos loisirs</a></li>
+                                                                                                        <li><a href="./" style="color:red">Chambres</a></li>
+                                                    <li><a href="../seminaire" style="color:white">Séminaires</a></li>
+                                                    <li><a href="../restaurant" style="color:white">Restaurant</a></li>
+                                                    <li><a href="../loisir" style="color:white">Nos loisirs</a></li>
+                                                    <li><a href="../reservation" style="color:white">Réservation</a></li>
                                     <!--Header section accueil
                                                                                                         <li><a href="#">Gallery</a></li>
                                                                                                         <li><a href="#">pages</a>
@@ -635,7 +636,7 @@
     <!-- <div class="col-md-6">
                                     <div class="newsletter-form">
                                         <form id="mc-form" class="mc-form" >
-											<input id="mc-email" type="email" autocomplete="off" placeholder="Enter Address..." />
+											<input id="mc-email" type="email"   placeholder="Enter Address..." />
 											<button id="mc-submit" type="submit">Subscribe</button>
 										</form>
                                     </div>-->

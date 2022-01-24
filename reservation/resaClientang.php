@@ -31,7 +31,7 @@ $compt = $req->rowCount();
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Villa blanca | Restaurants_bars</title>
+    <title>Villa blanca | Reservation</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -186,12 +186,42 @@ $compt = $req->rowCount();
                 <div class="mobile-menu-area hidden-lg hidden-md">
                     <div class="container">
                         <div class="col-md-12">
-                            <nav id="dropdown">
+                            <nav>
                                 <ul>
-                                    <li><a href="../chambre/chambres.php">ROOMS</a></li>
-                                    <li><a href="../seminaire/seminaires.php">SEMINARS</a></li>
-                                    <li><a href="../restaurant/resto.php">RESTAURANT</a></li>
-                                    <li><a href="../loisir/loisirs.php">HOBBIES</a></li>
+                                <li><a href="../restaurant/resto.php" style="color:white">RESTAURANT</a></li>
+                                                    <li><a href="../loisir/loisirs.php" style="color:white">HOBBIES</a></li>
+                                                    <li><a href="./detailang.php" style="color:white">RESERVATION</a></li>
+                                                    <?php if (isset($_SESSION['utilisateur'])) {
+    $req = $bdd->prepare('SELECT * FROM facture WHERE id_cl=?');
+    $req->execute([$_SESSION['utilisateur']]);
+    $facts = $req->fetchAll();
+    $rowN = 0;
+    $row = 0;
+    foreach ($facts as $fact) {
+        if ($fact['statut'] == 0) {
+            ++$rowN;
+        }
+        if ($fact['statut'] == 1) {
+            ++$row;
+        }
+    }
+    if ($row == 0 && $rowN != 0) {
+        echo '<li><span class="badge badge-warning" id="lblCartCounts">'.$rowN.'</span><a href="resaClientang.php" style="color:red">My reservations</a>
+                                                            <a href="resaClientang.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a></li>';
+    }
+    if ($row != 0 && $rowN == 0) {
+        echo '<li><a href="resaClientang.php" style="color:red">My reservations</a>
+                                                            <a href="resaClientang.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                            <span class="badge badge-warning" id="lblCartCount">'.$row.'</span></li>';
+    }
+    if ($row != 0 && $rowN != 0) {
+        echo '<li><span class="badge badge-warning" id="lblCartCounts">'.$rowN.'</span><a href="resaClientang.php" style="color:red">My reservations</a>
+                                                            <a href="resaClientang.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                            <span class="badge badge-warning" id="lblCartCount">'.$row.'</span></li>';
+    }
+}
+                                                    ?>
+                                                    <li><a href="deconnexionClientang.php" style="color:white">Logout</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -387,7 +417,7 @@ $compt = $req->rowCount();
                                 <div class="col-md-3 col-sm-4 col-xs-6">
                                     <div class="single-footer mt-0">
                                         <div class="logo">
-                                            <img src="../images/logo/logo.png" alt="">
+                                            <img src="../images/logo/logo.png" alt="" style="background: white;">
                                         </div>
                                         <div class="f-adress">
                                             <p>

@@ -92,27 +92,27 @@ break;
             </div>
             <div class="form-group">
                 <input type="text" name="pseudo" class="form-control" placeholder="Nom" required="required"
-                    autocomplete="off">
+                     >
             </div>
             <div class="form-group">
                 <input type="text" name="prenom" class="form-control" placeholder="Prénom" required="required"
-                    autocomplete="off">
+                     >
             </div>
             <div class="form-group">
                 <input type="text" name="tel" class="form-control" placeholder="Contact" required="required"
-                    autocomplete="off">
+                     >
             </div>
             <div class="form-group">
                 <input type="email" name="email" class="form-control" placeholder="Email" required="required"
-                    autocomplete="off">
+                     >
             </div>
             <div class="form-group">
                 <input type="password" name="password" class="form-control" placeholder="Mot de passe"
-                    required="required" autocomplete="off">
+                    required="required"  >
             </div>
             <div class="form-group">
                 <input type="password" name="password_retype" class="form-control"
-                    placeholder="Re-tapez le mot de passe" required="required" autocomplete="off">
+                    placeholder="Re-tapez le mot de passe" required="required"  >
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-block">Inscription</button>

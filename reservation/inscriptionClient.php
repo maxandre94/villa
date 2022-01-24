@@ -17,7 +17,7 @@ if (isset($_SESSION['resa'])) {
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Villa blanca | Restaurants_bars</title>
+    <title>Villa blanca | Réservation</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -169,12 +169,45 @@ if (isset($_SESSION['resa'])) {
                 <div class="mobile-menu-area hidden-lg hidden-md">
                     <div class="container">
                         <div class="col-md-12">
-                            <nav id="dropdown">
+                            <nav>
                                 <ul>
-                                    <li><a href="../chambre">Chambres</a></li>
-                                    <li><a href="../seminaire">Séminaires</a></li>
-                                    <li><a href="../restaurant">Restaurant</a></li>
-                                    <li><a href="../loisir">Nos loisirs</a></li>
+                                <li><a href="../chambre">Chambres</a></li>
+                                                    <li><a href="../seminaire">Séminaires</a></li>
+                                                    <li><a href="../restaurant">Restaurant</a></li>
+                                                    <li><a href="../loisir">Nos loisirs</a></li>
+                                                    <li><a href="./">Reservation</a></li>
+                                                    <?php if (isset($_SESSION['utilisateur'])) {
+    $req = $bdd->prepare('SELECT * FROM facture WHERE id_cl=?');
+    $req->execute([$_SESSION['utilisateur']]);
+    $facts = $req->fetchAll();
+    $rowN = 0;
+    $row = 0;
+    foreach ($facts as $fact) {
+        if ($fact['statut'] == 0) {
+            ++$rowN;
+        }
+        if ($fact['statut'] == 1) {
+            ++$row;
+        }
+    }
+    if ($row == 0 && $rowN != 0) {
+        echo '<li><span class="badge badge-warning" id="lblCartCounts">'.$rowN.'</span><a href="resaClient.php">Mes réservations</a>
+                                                                <a href="resaClient.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a></li>';
+    }
+    if ($row != 0 && $rowN == 0) {
+        echo '<li><a href="resaClient.php">Mes réservations</a>
+                                                                <a href="resaClient.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                                <span class="badge badge-warning" id="lblCartCount">'.$row.'</span></li>';
+    }
+    if ($row != 0 && $rowN != 0) {
+        echo '<li><span class="badge badge-warning" id="lblCartCounts">'.$rowN.'</span><a href="resaClient.php">Mes réservations</a>
+                                                                <a href="resaClient.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                                <span class="badge badge-warning" id="lblCartCount">'.$row.'</span></li>';
+    }
+} else {
+    echo '<li><a href="connexionClient.php" style="color:red">Connexion</a></li>';
+}
+?>
                                 </ul>
                             </nav>
                         </div>
@@ -218,9 +251,9 @@ if (isset($_SESSION['resa'])) {
                         <div class="col-md-12">
 
                             <!-- FIN en tête -->
+                            <a href="ConnexionClient.php"> Connexion </a>
 
-
-                            <div class="login-form">
+                            <div class="login-form" id="table_resa">
                                 <?php
 if (isset($_GET['reg_err'])) {
     $err = htmlspecialchars($_GET['reg_err']);
@@ -305,6 +338,13 @@ break;
                                 </div>
                                 <?php
 break;
+case 'email':
+    ?>
+                        <div class="alert alert-danger">
+                            <strong>Erreur</strong> email Non conforme.
+                        </div>
+                        <?php
+break;
 
         case 'email_length':
             ?>
@@ -320,40 +360,167 @@ break;
                                     <strong>Erreur</strong> nom trop long.
                                 </div>
                                 <?php
-
+break;
     }
+    
 }
 ?>
 
-                                <form method="post" action="inscriptionClTraitement.php">
+<?php
+if(isset($_SESSION['tab'])){
+    $tab=$_SESSION['tab'];
+    if($tab[0]==='Mr')$civilite='Monsieur';
+    if($tab[0]==='Mme')$civilite='Madame';
+    if($tab[0]==='Mlle')$civilite='Mademoiselle';
+    $nom=$tab[1];
+    $prenom=$tab[2];
+    $contact=$tab[3];
+    $adress=$tab[4];
+    $etat=$tab[6];
+    $ville=$tab[7];
+    $cp=$tab[8];
+    $email=$tab[9];
+}else{
+    $civilite='Monsieur';
+    $nom='';
+    $prenom='';
+    $contact='';
+    $adress='';
+    $etat='';
+    $ville='';
+    $cp='';
+    $email='';
+}
+
+if($civilite==='Monsieur'){
+    $htmlCivilite='<div class="form-group">
+    <select class="form-control" name="civilite">
+        <option value="Mr">Monsieur</option>
+        <option value="Mme">Madame</option>
+        <option value="Mlle">Mademoiselle</option>
+    </select>
+</div>';
+}
+if($civilite==='Madame'){
+    $htmlCivilite='<div class="form-group">
+    <select class="form-control" name="civilite">
+        <option value="Mr">Monsieur</option>
+        <option value="Mme" selected>Madame</option>
+        <option value="Mlle">Mademoiselle</option>
+    </select>
+</div>';
+}
+if($civilite=='=Mademoiselle'){
+    $htmlCivilite='<div class="form-group">
+    <select class="form-control" name="civilite">
+        <option value="Mr">Monsieur</option>
+        <option value="Mme">Madame</option>
+        <option value="Mlle" selected>Mademoiselle</option>
+    </select>
+</div>';
+}
+if($nom===''){
+    $htmlNom='<div class="form-group">
+    <input type="text" name="nom" class="form-control" placeholder="Nom"
+        required="required"  >
+</div>';
+}else{
+    $htmlNom='<div class="form-group">
+    <input type="text" name="nom" class="form-control" placeholder="Nom"
+        required="required"   value='.$nom.'>
+</div>';
+}
+if($prenom===''){
+    $htmlPrenom='<div class="form-group">
+    <input type="text" name="pren" class="form-control" placeholder="Prénoms"
+        required="required"  >
+</div>';
+}else{
+    $htmlPrenom='<div class="form-group">
+    <input type="text" name="pren" class="form-control" placeholder="Prénoms"
+        required="required"   value='.$prenom.'>
+</div>';
+}
+if($contact===''){
+    $htmlContact='<div class="form-group">
+    <input type="text" name="tel" class="form-control" placeholder="Contact"
+        required="required"  >
+</div>';
+}else{
+    $htmlContact='<div class="form-group">
+    <input type="text" name="tel" class="form-control" placeholder="Contact"
+        required="required"   value='.$contact.'>
+</div>';
+}
+if($adress===''){
+    $htmlAdress='<div class="form-group">
+    <input type="text" name="adress" class="form-control" placeholder="Addresse"
+        required="required"  >
+</div>';
+}else{
+    $htmlAdress='<div class="form-group">
+    <input type="text" name="adress" class="form-control" placeholder="Addresse"
+        required="required"   value='.$adress.'>
+</div>';
+}
+if($etat===''){
+    $htmlEtat='<div class="form-group">
+    <input type="text" name="etat" class="form-control" placeholder="Etat (EX: AZ) pour les états fédéraux"
+         >
+</div>';
+}else{
+    $htmlEtat='<div class="form-group">
+    <input type="text" name="etat" class="form-control" placeholder="Etat (EX: AZ) pour les états fédéraux"
+          value='.$etat.'>
+</div>';
+}
+if($ville===''){
+    $htmlVille='<div class="form-group">
+    <input type="text" name="ville" class="form-control" placeholder="Ville"
+        required="required"  >
+</div>';
+}else{
+    $htmlVille='<div class="form-group">
+    <input type="text" name="ville" class="form-control" placeholder="Ville"
+        required="required"   value='.$ville.'>
+</div>';
+}
+if($cp===''){
+    $htmlCp='<div class="form-group">
+    <input type="text" name="cp" class="form-control" placeholder="Code postal (Ex : 225)"
+        required="required"  >
+</div>';
+}else{
+    $htmlCp='<div class="form-group">
+    <input type="text" name="cp" class="form-control" placeholder="Code postal (Ex : 225)"
+        required="required"   value='.$cp.'>
+</div>';
+}
+if($email===''){
+    $htmlEmail='<div class="form-group">
+    <input type="email" name="email" class="form-control" placeholder="Email"
+        required="required"  >
+</div>';
+}else{
+    $htmlEmail='<div class="form-group">
+    <input type="email" name="email" class="form-control" placeholder="Email"
+        required="required"   value='.$email.'>
+</div>';
+}
+?>
+
+                                <form method="post" action="inscriptionClTraitement.php" name=""formulaire>
                                     <h2 class="text-center">Inscription</h2>
-                                    <div class="form-group">
-                                        <select class="form-control" name="civilite">
-                                            <option value="Mr">Monsieur</option>
-                                            <option value="Mme">Madame</option>
-                                            <option value="Mlle">Mademoiselle</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" name="nom" class="form-control" placeholder="Nom"
-                                            required="required" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" name="pren" class="form-control" placeholder="Prénom"
-                                            required="required" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" name="tel" class="form-control" placeholder="Contact"
-                                            required="required" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" name="adress" class="form-control" placeholder="Address"
-                                            required="required" autocomplete="off">
-                                    </div>
+                                    <?php 
+                                        echo $htmlCivilite; 
+                                        echo $htmlNom;
+                                        echo $htmlPrenom;
+                                        echo $htmlContact;
+                                        echo $htmlAdress;
+                                    ?>
 
                                     <div class="form-group">
                                     <select class="form-control" name="pays" >
-<option value="">--- Sélectionner un pays ---</option>
 <option value="4;AF;AFG;Afghanistan">Afghanistan</option>
 <option value="710;ZA;ZAF;Afrique du Sud">Afrique du Sud</option>
 <option value="248;AX;ALA;Aland (Îles)">Aland (Îles)</option>
@@ -413,7 +580,7 @@ break;
 <option value="191;HR;HRV;Croatie">Croatie</option>
 <option value="192;CU;CUB;Cuba">Cuba</option>
 <option value="531;CW;CUW;Curaçao">Curaçao</option>
-<option value="384;CI;CIV;Côte d'Ivoire">Côte d'Ivoire</option>
+<option value="384;CI;CIV;Côte d'Ivoire" selected>Côte d'Ivoire</option>
 <option value="208;DK;DNK;Danemark">Danemark</option>
 <option value="262;DJ;DJI;Djibouti">Djibouti</option>
 <option value="214;DO;DOM;dominicaine (République)">dominicaine (République)</option>
@@ -606,30 +773,23 @@ break;
 </select>
 </div>
 
-                                    <div class="form-group">
-                                        <input type="text" name="etat" class="form-control" placeholder="Etat (EX: AZ) pour les états fédéraux"
-                                            autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" name="ville" class="form-control" placeholder="Ville"
-                                            required="required" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" name="cp" class="form-control" placeholder="Code postal (Ex : 225)"
-                                            required="required" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="email" name="email" class="form-control" placeholder="Email"
-                                            required="required" autocomplete="off">
-                                    </div>
+                                    <?php
+                                        echo $htmlEtat;
+                                        echo $htmlVille;
+                                        echo $htmlCp;
+                                        echo $htmlEmail;
+                                    ?>
+                                    
+                                    
+                                    
                                     <div class="form-group">
                                         <input type="password" name="password" class="form-control"
-                                            placeholder="Mot de passe" required="required" autocomplete="off">
+                                            placeholder="Mot de passe" required="required"  >
                                     </div>
                                     <div class="form-group">
                                         <input type="password" name="password_retype" class="form-control"
                                             placeholder="Re-tapez le mot de passe" required="required"
-                                            autocomplete="off">
+                                             >
                                     </div>
                                     <div class="form-group">
                                         <input type="submit" class="btn btn-primary btn-lg" name="ok"
@@ -703,7 +863,7 @@ break;
                                 <div class="col-md-3 col-sm-4 col-xs-6">
                                     <div class="single-footer mt-0">
                                         <div class="logo">
-                                            <img src="../images/logo/logo.png" alt="">
+                                            <img src="../images/logo/logo.png" alt="" style="background: white;">
                                         </div>
                                         <div class="f-adress">
                                             <p>
@@ -774,6 +934,40 @@ break;
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Placed js at the end of the document so the pages load faster -->
+
+    <!-- jquery latest version -->
+    <script src="../js/vendor/jquery-1.12.0.min.js"></script>
+    <!-- Bootstrap framework js -->
+    <script src="../js/bootstrap.min.js"></script>
+    <!--counter up js-->
+    <script src="../js/waypoints.min.js"></script>
+    <script src="../js/jquery.counterup.min.js"></script>
+    <!-- Video player js -->
+    <script src="../js/video-player.js"></script>
+    <!-- headlines js -->
+    <script src="../js/animated-headlines.js"></script>
+    <!-- Ajax mail js -->
+    <script src="../js/mailchimp.js"></script>
+    <!-- Ajax mail js -->
+    <script src="../js/ajax-mail.js"></script>
+    <!-- parallax js -->
+    <script src="../js/parallax.js"></script>
+    <!-- textilate js -->
+    <script src="../js/textilate.js"></script>
+    <script src="../js/lettering.js"></script>
+    <!--isotope js-->
+    <script src="../js/isotope.pkgd.min.js"></script>
+    <script src="../js/packery-mode.pkgd.min.js"></script>
+    <!-- Owl carousel Js -->
+    <script src="../js/owl.carousel.min.js"></script>
+    <!--Magnificant js-->
+    <script src="../js/jquery.magnific-popup.js"></script>
+    <!-- All js plugins included in this file. -->
+    <script src="../js/plugins.js"></script>
+    <!-- Main js file that contents all jQuery plugins activation. -->
+    <script src="../js/main.js"></script>
 
 </body>
 

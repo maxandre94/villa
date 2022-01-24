@@ -169,7 +169,7 @@
                                                         <li><a href="../chambre/chambres.php">Rooms</a></li>
                                                         <li><a href="../seminaire/seminaires.php">Seminars</a></li>
                                                         <li><a href="../restaurant/resto.php">Restaurant</a></li>
-                                                        <li><a href="./loisirs.php">Hobbies</a></li>
+                                                        <li><a href="./loisirs.php" class="btn btn-danger">Hobbies</a></li>
                                                         <li><a href="../reservation/detailang.php">Reservation</a></li>
                                                         <!--Header section reste du menu
                                                                                                                             <li><a href="gallery-2.html">Gallery</a></li>
@@ -203,7 +203,7 @@
                     <div class="mobile-menu-area hidden-lg hidden-md">
                         <div class="container">
                             <div class="col-md-12">
-                                <nav id="dropdown">
+                                <nav>
                                     <ul>
                                         <!--Header section accueil
                                                                                                         <li><a href="#">Accueil</a>
@@ -262,10 +262,11 @@
                                                                                                         </li>
                                                                                                         -->
 
-                                        <li><a href="../chambre/chambres.php">Rooms</a></li>
-                                        <li><a href="../seminaire/seminaires.php">Seminars</a></li>
-                                        <li><a href="../restaurant/resto.php">Restaurant</a></li>
-                                        <li><a href="./loisirs.php">Hobbies</a></li>
+                                                                                                        <li><a href="../chambre/chambres.php">Rooms</a></li>
+                                                        <li><a href="../seminaire/seminaires.php" style="color:white">Seminars</a></li>
+                                                        <li><a href="../restaurant/resto.php" style="color:white">Restaurant</a></li>
+                                                        <li><a href="./loisirs.php" style="color:red">Hobbies</a></li>
+                                                        <li><a href="../reservation/detailang.php" style="color:white">Reservation</a></li>
                                         <!--Header section accueil
                                                                                                         <li><a href="#">Gallery</a></li>
                                                                                                         <li><a href="#">pages</a>

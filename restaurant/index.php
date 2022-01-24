@@ -147,7 +147,7 @@
                                                                                                                             </li>-->
                                                     <li><a href="../chambre">Chambres</a></li>
                                                     <li><a href="../seminaire">Séminaires</a></li>
-                                                    <li><a href="./">Restaurant</a></li>
+                                                    <li><a href="./" class="btn btn-danger">Restaurant</a></li>
                                                     <li><a href="../loisir">Nos loisirs</a></li>
                                                     <li><a href="../reservation">Réservation</a></li>
                                                     <!--Header section reste du menu
@@ -182,7 +182,7 @@
                 <div class="mobile-menu-area hidden-lg hidden-md">
                     <div class="container">
                         <div class="col-md-12">
-                            <nav id="dropdown">
+                            <nav>
                                 <ul>
                                     <!--Header section accueil
                                                                                                         <li><a href="#">Accueil</a>
@@ -241,10 +241,11 @@
                                                                                                         </li>
                                                                                                         -->
 
-                                    <li><a href="../chambre">Chambres</a></li>
-                                    <li><a href="../seminaire">Séminaires</a></li>
-                                    <li><a href="./">Restaurant</a></li>
-                                    <li><a href="../loisir">Nos loisirs</a></li>
+                                                                                                        <li><a href="../chambre" style="color:white">Chambres</a></li>
+                                                    <li><a href="../seminaire" style="color:white">Séminaires</a></li>
+                                                    <li><a href="./" style="color:red">Restaurant</a></li>
+                                                    <li><a href="../loisir" style="color:white">Nos loisirs</a></li>
+                                                    <li><a href="../reservation" style="color:white">Réservation</a></li>
                                     <!--Header section accueil
                                                                                                         <li><a href="#">Gallery</a></li>
                                                                                                         <li><a href="#">pages</a>

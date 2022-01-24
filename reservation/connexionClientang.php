@@ -11,12 +11,12 @@ if (isset($_SESSION['resa'])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Villa blanca | Restaurants_bars</title>
+    <title>Villa blanca | Customer connection</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -167,12 +167,44 @@ if (isset($_SESSION['resa'])) {
                 <div class="mobile-menu-area hidden-lg hidden-md">
                     <div class="container">
                         <div class="col-md-12">
-                            <nav id="dropdown">
+                            <nav>
                                 <ul>
-                                    <li><a href="../chambre/chambres.php">ROOMS</a></li>
-                                    <li><a href="../seminaire/seminaires.php">SEMINARS</a></li>
-                                    <li><a href="../restaurant/resto.php">RESTAURANT</a></li>
-                                    <li><a href="../loisir/loisirs.php">HOBBIES</a></li>
+                                <li><a href="../chambre/chambres.php">ROOMS</a></li>
+                                                    <li><a href="../seminaire/seminaires.php">SEMINARS</a></li>
+                                                    <li><a href="../restaurant/resto.php">RESTAURANT</a></li>
+                                                    <li><a href="../loisir/loisirs.php">HOBBIES</a></li>
+                                                    <?php if (isset($_SESSION['utilisateur'])) {
+    $req = $bdd->prepare('SELECT * FROM facture WHERE id_cl=?');
+    $req->execute([$_SESSION['utilisateur']]);
+    $facts = $req->fetchAll();
+    $rowN = 0;
+    $row = 0;
+    foreach ($facts as $fact) {
+        if ($fact['statut'] == 0) {
+            ++$rowN;
+        }
+        if ($fact['statut'] == 1) {
+            ++$row;
+        }
+    }
+    if ($row == 0 && $rowN != 0) {
+        echo '<li><span class="badge badge-warning" id="lblCartCounts">'.$rowN.'</span><a href="resaClientang.php">Mes réservations</a>
+                                                                <a href="resaClientang.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a></li>';
+    }
+    if ($row != 0 && $rowN == 0) {
+        echo '<li><a href="resaClientang.php">Mes réservations</a>
+                                                                <a href="resaClientang.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                                <span class="badge badge-warning" id="lblCartCount">'.$row.'</span></li>';
+    }
+    if ($row != 0 && $rowN != 0) {
+        echo '<li><span class="badge badge-warning" id="lblCartCounts">'.$rowN.'</span><a href="resaClientang.php">Mes réservations</a>
+                                                                <a href="resaClientang.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                                <span class="badge badge-warning" id="lblCartCount">'.$row.'</span></li>';
+    }
+} else {
+    echo '<li><a href="connexionClientang.php" style="color:red">Connection</a></li>';
+}
+                                                            ?>
                                 </ul>
                             </nav>
                         </div>
@@ -216,7 +248,7 @@ if (isset($_SESSION['resa'])) {
                         <div class="col-md-12">
 
                             <!-- FIN en tête -->
-
+                            <a href="inscriptionClientang.php">Registration</a>
 
                             <div class="login">
                                 <?php
@@ -227,7 +259,7 @@ if (isset($_GET['login_err'])) {
         case 'password':
             ?>
                                 <div class="alert alert-danger">
-                                    <strong>Error</strong> incorrect password
+                                    <strong>Error</strong> incorrect password, a reset email has been sent to you
                                 </div>
                                 <?php
 break;
@@ -254,18 +286,18 @@ break;
                                     <h2 class="text-center">Connection</h2>
                                     <div class="form-group">
                                         <input type="email" name="email" class="form-control" placeholder="Email"
-                                            required="required" autocomplete="off">
+                                            required="required"  >
                                     </div>
                                     <div class="form-group">
                                         <input type="password" name="password" class="form-control"
-                                            placeholder="Password" required="required" autocomplete="off">
+                                            placeholder="Password" required="required"  >
                                     </div>
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-primary btn-block">Connection</button>
                                     </div>
                                 </form>
                             </div>
-                            <a href="inscriptionClientang.php">Registration</a>
+                            
                             <style>
                             .login {
                                 width: 340px;
@@ -326,7 +358,7 @@ break;
                                 <div class="col-md-3 col-sm-4 col-xs-6">
                                     <div class="single-footer mt-0">
                                         <div class="logo">
-                                            <img src="../images/logo/logo.png" alt="">
+                                            <img src="../images/logo/logo.png" alt="" style="background: white;">
                                         </div>
                                         <div class="f-adress">
                                             <p>

@@ -236,7 +236,7 @@ $chambre = $req->fetch();
                     <div class="mobile-menu-area hidden-lg hidden-md">
                         <div class="container">
                             <div class="col-md-12">
-                                <nav id="dropdown">
+                                <nav>
                                     <ul>
                                         <!--Header section accueil
                                                                                             <li><a href="#">Accueil</a>
@@ -295,10 +295,11 @@ $chambre = $req->fetch();
                                                                                             </li>
                                                                                             -->
 
-                                        <li><a href="../chambre/chambres.php">Rooms</a></li>
-                                        <li><a href="../seminaire/seminaires.php">Seminars</a></li>
-                                        <li><a href="../restaurant/resto.php">Restaurant</a></li>
-                                        <li><a href="../loisir/loisirs.php">Hobbies</a></li>
+                                                                                            <li><a href="../chambre/chambres.php" style="color:white">Rooms</a></li>
+                                                        <li><a href="../seminaire/seminaires.php" style="color:white">Seminars</a></li>
+                                                        <li><a href="../restaurant/resto.php" style="color:white">Restaurant</a></li>
+                                                        <li><a href="../loisir/loisirs.php" style="color:white">Hobbies</a></li>
+                                                        <li><a href="../reservation/detailang.php" style="color:white">Reservation</a></li>
                                         <!--Header section accueil
                                                                                             <li><a href="#">Gallery</a></li>
                                                                                             <li><a href="#">pages</a>
@@ -332,19 +333,19 @@ $chambre = $req->fetch();
                             <div class="col-md-4 col-sm-5">
                                 <div class="booking-box">
                                     <div class="booking-title">
-                                        <h3>Reservation</h3>
+                                        <h3 style="color:red;">Reservation</h3>
                                     </div>
                                     <div class="booking-form">
                                         <form action="resaAjoutIndexang.php" method="POST" class="insert-form" id="formulaire" name="formulaire">
-                                        <div class="b-date arrive mb-15">
+                                        <div class="form-group col-md-15">
                                             <label style="color: white;">Arrival</label>
                                             <input class="date" type="date" placeholder="" name="arrive" id="arrive" value="<?php echo date('Y-m-d'); ?>">
                                         </div>
-                                        <div class="b-date departure mb-15">
+                                        <div class="form-group col-md-15">
                                             <label style="color: white;">Departure</label>
                                             <input class="date" type="date" placeholder="" name="depart" id="depart" value="<?php echo date('Y-m-d', strtotime('+1 day')); ?>">
                                         </div>
-                                        <div class="select-book mb-30">
+                                        <div class="form-group col-md-15">
                                     <!--<select class="" id="chb_type" name="chb_type" onchange="alert(this.value)">-->
                                     <select class="select-booking" id="chb_type" name="chb_type">
                                         <?php
@@ -363,7 +364,7 @@ $chambre = $req->fetch();
                                     </select>
 
                                         </div>
-                                        <div class="select-book  mb-30">
+                                        <div class="form-group col-md-15">
                                         <select class="select-booking" id="chb_nb" name="chb_nb">
                                         <option value="1">Room number</option>
                                         <?php for ($i = 1; $i <= 20; ++$i) {
@@ -371,7 +372,7 @@ $chambre = $req->fetch();
                                         } ?>
                                     </select>
                                         </div>
-                                        <div class="select-book  mb-30">
+                                        <div class="form-group col-md-15">
                                         <select class="select-booking" id="pers_nb" name="pers_nb">
                                         <option value="1">Number of people</option>
                                         <?php for ($i = 1; $i <= 20; ++$i) {
@@ -380,7 +381,7 @@ $chambre = $req->fetch();
                                     </select>
                                         </div>
                                         <div class="submit-form">
-                                            <button type="submit">Reserve</button>
+                                            <button type="submit" style="color:white; background-color:red;">Reserve</button>
                                         </div>
                                         </form>
                                     </div>

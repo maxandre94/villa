@@ -124,7 +124,7 @@ function dateDiffInDays($date1, $date2)
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Villa blanca | Restaurants_bars</title>
+    <title>Villa blanca | Invoice detail</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -276,12 +276,45 @@ function dateDiffInDays($date1, $date2)
                 <div class="mobile-menu-area hidden-lg hidden-md">
                     <div class="container">
                         <div class="col-md-12">
-                            <nav id="dropdown">
+                            <nav>
                                 <ul>
-                                    <li><a href="../chambre/chambres.php">ROOMS</a></li>
-                                    <li><a href="../seminaire/seminaires.php">SEMINARS</a></li>
-                                    <li><a href="../restaurant/resto.php">RESTAURANT</a></li>
-                                    <li><a href="../loisir/loisirs.php">HOBBIES</a></li>
+                                <li><a href="../chambre/chambres.php" style="color:white">ROOMS</a></li>
+                                                    <li><a href="../seminaire/seminaires.php" style="color:white">SEMINARS</a></li>
+                                                    <li><a href="../restaurant/resto.php" style="color:white">RESTAURANT</a></li>
+                                                    <li><a href="../loisir/loisirs.php" style="color:white">HOBBIES</a></li>
+                                                    <li><a href="./detailang.php" style="color:red">RESERVATION</a></li>
+                                                    <?php if (isset($_SESSION['utilisateur'])) {
+    $req = $bdd->prepare('SELECT * FROM facture WHERE id_cl=?');
+    $req->execute([$_SESSION['utilisateur']]);
+    $facts = $req->fetchAll();
+    $rowN = 0;
+    $row = 0;
+    foreach ($facts as $fact) {
+        if ($fact['statut'] == 0) {
+            ++$rowN;
+        }
+        if ($fact['statut'] == 1) {
+            ++$row;
+        }
+    }
+    if ($row == 0 && $rowN != 0) {
+        echo '<li><span class="badge badge-warning" id="lblCartCounts">'.$rowN.'</span><a href="resaClientang.php" style="color:white">My reservations</a>
+                                                            <a href="resaClientang.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a></li>';
+    }
+    if ($row != 0 && $rowN == 0) {
+        echo '<li><a href="resaClientang.php" style="color:white">My reservations</a>
+                                                            <a href="resaClientang.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                            <span class="badge badge-warning" id="lblCartCount">'.$row.'</span></li>';
+    }
+    if ($row != 0 && $rowN != 0) {
+        echo '<li><span class="badge badge-warning" id="lblCartCounts">'.$rowN.'</span><a href="resaClientang.php" style="color:white">My reservations</a>
+                                                            <a href="resaClientang.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                            <span class="badge badge-warning" id="lblCartCount">'.$row.'</span></li>';
+    }
+} else {
+    echo '<li><a href="connexionClientang.php" style="color:white">Connection</a></li>';
+}
+                                                    ?>
                                 </ul>
                             </nav>
                         </div>
@@ -547,7 +580,7 @@ customer(s) : '.$pers.'<span style="margin-left: 150px;"> Total</span></td>
                                 <div class="col-md-3 col-sm-4 col-xs-6">
                                     <div class="single-footer mt-0">
                                         <div class="logo">
-                                            <img src="../images/logo/logo.png" alt="">
+                                            <img src="../images/logo/logo.png" alt="" style="background: white;">
                                         </div>
                                         <div class="f-adress">
                                             <p>

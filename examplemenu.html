@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Tuto MENU Responsive</title>
+	<style type="text/css">
+		
+		#closeMenu, #openMenu, #menu {
+			display: none;
+		}
+
+
+		@media screen and (max-device-width: 480px) {
+			body {
+				font-size: 3em;
+			}
+
+			#openMenu {
+				display: block;
+			}
+
+			#closeMenu {
+				display: none;
+			}
+
+			#menu {
+                display: block;
+				flex-direction: column;
+				align-items: flex-start;
+				justify-content: flex-start;
+				position: absolute;
+				left: -100%;
+				transition: all 0.2s;
+				background: rgb(0, 70, 180);
+				width: 80%;
+				height: 100vh;
+			}
+
+			#menu li {
+				list-style-type: none;
+			}
+
+			#menu li a {
+				color: #fff;
+				display: block;
+				padding: 0.7em;
+				text-decoration: none;
+				text-transform: uppercase;
+				font-family: Arial;
+				font-weight: normal;
+				margin: 0;
+			}
+		}
+
+	</style>
+</head>
+<body>
+
+	<header>
+        <div class="hidden-md">
+		<div id="openMenu">
+			M
+		</div>
+		<div id="closeMenu">
+			X
+		</div>
+
+		<ul id="menu">
+			<li><a href="#">Accueil</a></li>
+			<li><a href="#">Page 2</a></li>
+			<li><a href="#">Page 3</a></li>
+			<li><a href="#">Page 4</a></li>
+			<li><a href="#">Page 5</a></li>
+		</ul>
+        </div>
+
+	</header>
+
+	<script type="text/javascript">
+			
+		var openMenu = document.getElementById("openMenu");
+		var closeMenu = document.getElementById("closeMenu");
+
+		openMenu.addEventListener("click", function() {
+			document.getElementById("menu").style.left = 0;
+			
+			closeMenu.style.display = "block";
+			openMenu.style.display = "none";
+		})
+		closeMenu.addEventListener("click", function() {
+			document.getElementById("menu").style.left = "-100%";
+			
+			openMenu.style.display = "block";
+			closeMenu.style.display = "none";
+		})
+
+	</script>
+
+</body>
+</html>

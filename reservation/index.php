@@ -25,7 +25,7 @@ $types = $bdd->query('SELECT * from type')->fetchAll();
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Villa blanca | Restaurants_bars</title>
+    <title>Villa blanca | Réservation</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -177,12 +177,45 @@ $types = $bdd->query('SELECT * from type')->fetchAll();
                 <div class="mobile-menu-area hidden-lg hidden-md">
                     <div class="container">
                         <div class="col-md-12">
-                            <nav id="dropdown">
+                            <nav class="navbar navbar-expand-lg navbar-light bg-light">
                                 <ul>
-                                    <li><a href="../chambre">Chambres</a></li>
-                                    <li><a href="../seminaire">Séminaires</a></li>
-                                    <li><a href="../restaurant">Restaurant</a></li>
-                                    <li><a href="../loisir">Nos loisirs</a></li>
+                                <li><a href="../chambre" style="color:white">Chambres</a></li>
+                                                    <li><a href="../seminaire" style="color:white">Séminaires</a></li>
+                                                    <li><a href="../restaurant" style="color:white">Restaurant</a></li>
+                                                    <li><a href="../loisir" style="color:white">Nos loisirs</a></li>
+                                                    <li><a href="./" style="color:red">Reservation</a></li>
+                                                    <?php if (isset($_SESSION['utilisateur'])) {
+    $req = $bdd->prepare('SELECT * FROM facture WHERE id_cl=?');
+    $req->execute([$_SESSION['utilisateur']]);
+    $facts = $req->fetchAll();
+    $rowN = 0;
+    $row = 0;
+    foreach ($facts as $fact) {
+        if ($fact['statut'] == 0) {
+            ++$rowN;
+        }
+        if ($fact['statut'] == 1) {
+            ++$row;
+        }
+    }
+    if ($row == 0 && $rowN != 0) {
+        echo '<li><span class="badge badge-warning" id="lblCartCounts">'.$rowN.'</span><a href="resaClient.php" style="color:white">Mes réservations</a>
+                                                            <a href="resaClient.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a></li>';
+    }
+    if ($row != 0 && $rowN == 0) {
+        echo '<li><a href="resaClient.php" style="color:white">Mes réservations</a>
+                                                            <a href="resaClient.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                            <span class="badge badge-warning" id="lblCartCount">'.$row.'</span></li>';
+    }
+    if ($row != 0 && $rowN != 0) {
+        echo '<li><span class="badge badge-warning" id="lblCartCounts">'.$rowN.'</span><a href="resaClient.php" style="color:white">Mes réservations</a>
+                                                            <a href="resaClient.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                            <span class="badge badge-warning" id="lblCartCount">'.$row.'</span></li>';
+    }
+} else {
+    echo '<li><a href="connexionClient.php" style="color:white">Connexion</a></li>';
+}
+                                                    ?>
                                 </ul>
                             </nav>
                         </div>
@@ -325,7 +358,7 @@ $types = $bdd->query('SELECT * from type')->fetchAll();
                                     <input type="date" class="" name="depart" id="depart" value="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" />
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label for="nomb">Type de chambre</label>
+                                <label for="validationCustom02" class="form-label" style="font-family:Segoe UI semibold; ">Type de chambre</label>
                                     <!--<select class="" id="chb_type" name="chb_type" onchange="alert(this.value)">-->
                                     <select class="" id="chb_type" name="chb_type">
                                         <?php
@@ -337,7 +370,7 @@ $types = $bdd->query('SELECT * from type')->fetchAll();
                                     </select>
                                 </div>
                                 <div class="form-group col-md-2">
-                                    <label for="nbch" class="">Nombre de chambre</label>
+                                <label for="validationCustom02" class="form-label" style="font-family:Segoe UI semibold; ">Nombre de chambre</label>
                                     <select class="" id="chb_nb" name="chb_nb">
                                         <?php for ($i = 1; $i <= 20; ++$i) {
                                             echo '<option value='.$i.'>'.$i.'</option>';
@@ -345,7 +378,7 @@ $types = $bdd->query('SELECT * from type')->fetchAll();
                                     </select>
                                 </div>
                                 <div class="form-group col-md-2">
-                                    <label for="nbper" class="">Nombre de personne</label>
+                                <label for="validationCustom02" class="form-label" style="font-family:Segoe UI semibold; ">Nombre de personne</label>
                                     <select class="" id="pers_nb" name="pers_nb">
                                         <?php for ($i = 1; $i <= 20; ++$i) {
                                             echo '<option value='.$i.'>'.$i.'</option>';

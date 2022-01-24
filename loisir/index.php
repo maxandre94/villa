@@ -95,7 +95,7 @@
                                                     <li><a href="../chambre">Chambres</a></li>
                                                     <li><a href="../seminaire">Séminaires</a></li>
                                                     <li><a href="../restaurant">Restaurant</a></li>
-                                                    <li><a href="./">Nos loisirs</a></li>
+                                                    <li><a href="./" class="btn btn-danger">Nos loisirs</a></li>
                                                     <li><a href="../reservation">Réservation</a></li>
                                                    
                                                 </ul>
@@ -111,14 +111,15 @@
                 <div class="mobile-menu-area hidden-lg hidden-md">
                     <div class="container">
                         <div class="col-md-12">
-                            <nav id="dropdown">
+                            <nav>
                                 <ul>
                                    
 
-                                    <li><a href="../chambre">Chambres</a></li>
-                                    <li><a href="../seminaire">Séminaires</a></li>
-                                    <li><a href="../restaurant">Restaurant</a></li>
-                                    <li><a href="./">Nos loisirs</a></li>
+                                <li><a href="../chambre" style="color:white">Chambres</a></li>
+                                                    <li><a href="../seminaire" style="color:white">Séminaires</a></li>
+                                                    <li><a href="../restaurant" style="color:white">Restaurant</a></li>
+                                                    <li><a href="./" style="color:red">Nos loisirs</a></li>
+                                                    <li><a href="../reservation" style="color:white">Réservation</a></li>
                                     
                                 </ul>
                             </nav>

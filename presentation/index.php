@@ -157,14 +157,15 @@ $chambre = $req->fetch();
                 <div class="mobile-menu-area hidden-lg hidden-md">
                     <div class="container">
                         <div class="col-md-12">
-                            <nav id="dropdown">
+                            <nav>
                                 <ul>
                                     
             
-                                    <li><a href="../chambre">Chambres</a></li>
-                                    <li><a href="../seminaire">Séminaires</a></li>
-                                    <li><a href="../restaurant">Restaurant</a></li>
-                                    <li><a href="../loisir">Nos loisirs</a></li>
+                                <li><a href="../chambre" style="color:white">Chambres</a></li>
+                                <li><a href="../seminaire" style="color:white">Séminaires</a></li>
+                                <li><a href="../restaurant" style="color:white">Restaurant</a></li>
+                                <li><a href="../loisir" style="color:white">Nos loisirs</a></li>
+                                <li><a href="../reservation" style="color:white">Réservation</a></li>
                                     
                                    
                                 </ul>
@@ -181,19 +182,19 @@ $chambre = $req->fetch();
                         <div class="col-md-4 col-sm-5">
                             <div class="booking-box">
                                 <div class="booking-title">
-                                    <h3>Reservation</h3>
+                                    <h3 style="color:red;">Reservation</h3>
                                 </div>
                                 <div class="booking-form">
                                     <form action="resaAjoutIndex.php" method="POST" class="insert-form" id="formulaire" name="formulaire">
-                                        <div class="b-date arrive mb-15">
+                                        <div class="form-group col-md-15">
                                             <label style="color: white;">Date arrivée</label>
                                             <input class="date" type="date" placeholder="" name="arrive" id="arrive" value="<?php echo date('Y-m-d'); ?>">
                                         </div>
-                                        <div class="b-date departure mb-15">
+                                        <div class="form-group col-md-15">
                                             <label style="color: white;">Date de départ</label>
                                             <input class="date" type="date" placeholder="" name="depart" id="depart" value="<?php echo date('Y-m-d', strtotime('+1 day')); ?>">
                                         </div>
-                                        <div class="select-book mb-15">
+                                        <div class="form-group col-md-15">
                                     <!--<select class="" id="chb_type" name="chb_type" onchange="alert(this.value)">-->
                                     <select class="select-booking" id="chb_type" name="chb_type">
                                         <?php
@@ -211,7 +212,7 @@ $chambre = $req->fetch();
 
                                         </div>
 
-                                        <div class="select-book  mb-30">
+                                        <div class="form-group col-md-15">
                                         <select class="select-booking" id="chb_nb" name="chb_nb">
                                         <option value="1">Nombre de chambre</option>
                                         <?php for ($i = 1; $i <= 20; ++$i) {
@@ -219,7 +220,7 @@ $chambre = $req->fetch();
                                         } ?>
                                     </select>
                                         </div>
-                                        <div class="select-book  mb-30">
+                                        <div class="form-group col-md-15">
                                         <select class="select-booking" id="pers_nb" name="pers_nb">
                                         <option value="1">Nombre de personne</option>
                                         <?php for ($i = 1; $i <= 20; ++$i) {
@@ -228,7 +229,7 @@ $chambre = $req->fetch();
                                     </select>
                                         </div>
                                         <div class="submit-form">
-                                            <button type="submit">Réserver</button>
+                                            <button type="submit" style="color:white; background-color:red;">Réserver</button>
                                         </div>
                                     </form>
                                 </div>

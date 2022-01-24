@@ -73,6 +73,7 @@ try {
         } else {
             $etat = '';
         }
+        $_SESSION['tab']=[$civilite,$nom,$pren,$tel,$adress,$pays,$etat,$ville,$cp,$email];
 
         // On vérifie si l'utilisateur existe
         /*$check = $bdd->prepare('SELECT nom_cl, prenom_cl, email, tel_cl FROM client WHERE email = ?');
@@ -112,10 +113,13 @@ try {
                                                             $token = bin2hex(openssl_random_pseudo_bytes(64));
                                                             $cost = ['cost' => 12];
                                                             $password = password_hash($password, PASSWORD_BCRYPT, $cost);
-                                                            $query = "INSERT INTO client (langue, civilite_cl, nom_cl, prenom_cl, email, mot_pas, tel_cl, token) 
-      	    	  VALUES ('$langue', '$civilite', '$nom', '$pren', '$email', '$password', '$tel', '$token')";
-                                                            $res = $bdd->prepare($query);
-                                                            $exec = $res->execute();
+                                                            $query = $bdd->prepare("INSERT INTO client (langue, civilite_cl, nom_cl, prenom_cl, email, mot_pas, tel_cl, adress, pays, etat, ville, code_pos, token) 
+      	    	  VALUES ('$langue', '$civilite', '$nom', '$pren', '$email', '$password', '$tel', '$adress', '$code_pay', '$etat', '$ville', '$cp', '$token')");
+                                                            $query ->execute();
+
+                                                            $req = $bdd->prepare('SELECT * FROM utilisateurs WHERE token = ?');
+                                                            $req->execute([$_SESSION['user']]);
+                                                            $data = $req->fetch();
 
                                                             $date = date('Y-m-d H:i:s');
 
@@ -173,15 +177,18 @@ VALUES ('$id_fact','$id_cl', '$id_typ', '$arrive', '$depart', '$chb_nb', '$pers_
 
                                                             unset($_SESSION['resa']);
                                                             unset($_SESSION['langue']);
+                                                            unset($_SESSION['tab']);
 
                                                             // On redirige avec le message de succès
                                                             header('Location:resaClient.php');
                                                             die();
-                                                        }
+                                                        
                                                     } else {
                                                         header('Location: infocl.php?reg_err=password');
                                                         die();
                                                     }
+                                                } else{header('Location: inscriptionClient.php?reg_err=email');
+                                                    die();}
                                                 } else {
                                                     header('Location: infocl.php?reg_err=tel');
                                                     die();

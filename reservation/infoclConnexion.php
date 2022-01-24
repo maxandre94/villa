@@ -1,10 +1,8 @@
 <?php
 session_start();
 //require_once '../connection.php';
-if (isset($_SESSION['resa'])) {
-    $_resa = $_SESSION['resa'];
-} else {
-    $_resa = [];
+if (isset($_SESSION['utilisateur'])) {
+    header('Location: ./');
 }
 //print_r($_resa);
 
@@ -22,7 +20,7 @@ require_once '../connection.php';
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Villa blanca | Restaurants_bars</title>
+    <title>Villa blanca | Réservation</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -173,12 +171,46 @@ require_once '../connection.php';
                 <div class="mobile-menu-area hidden-lg hidden-md">
                     <div class="container">
                         <div class="col-md-12">
-                            <nav id="dropdown">
+                            <nav>
                                 <ul>
-                                    <li><a href="../chambre">Chambres</a></li>
-                                    <li><a href="../seminaire">Séminaires</a></li>
-                                    <li><a href="../restaurant">Restaurant</a></li>
-                                    <li><a href="../loisir">Nos loisirs</a></li>
+                                <ul>
+                                                    <li><a href="../chambre" style="color:white">Chambres</a></li>
+                                                    <li><a href="../seminaire" style="color:white">Séminaires</a></li>
+                                                    <li><a href="../restaurant"style="color:white">Restaurant</a></li>
+                                                    <li><a href="../loisir" style="color:white">Nos loisirs</a></li>
+                                                    <li><a href="./" style="color:red">Reservation</a></li>
+                                                    <?php if (isset($_SESSION['utilisateur'])) {
+    $req = $bdd->prepare('SELECT * FROM facture WHERE id_cl=?');
+    $req->execute([$_SESSION['utilisateur']]);
+    $facts = $req->fetchAll();
+    $rowN = 0;
+    $row = 0;
+    foreach ($facts as $fact) {
+        if ($fact['statut'] == 0) {
+            ++$rowN;
+        }
+        if ($fact['statut'] == 1) {
+            ++$row;
+        }
+    }
+    if ($row == 0 && $rowN != 0) {
+        echo '<li><span class="badge badge-warning" id="lblCartCounts">'.$rowN.'</span><a href="resaClient.php" style="color:white">Mes réservations</a>
+                                                            <a href="resaClient.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a></li>';
+    }
+    if ($row != 0 && $rowN == 0) {
+        echo '<li><a href="resaClient.php" style="color:white">Mes réservations</a>
+                                                            <a href="resaClient.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                            <span class="badge badge-warning" id="lblCartCount">'.$row.'</span></li>';
+    }
+    if ($row != 0 && $rowN != 0) {
+        echo '<li><span class="badge badge-warning" id="lblCartCounts">'.$rowN.'</span><a href="resaClient.php" style="color:white">Mes réservations</a>
+                                                            <a href="resaClient.php"><i class="fa" style="font-size:24px; color: white">&#xf07a;</i></a>
+                                                            <span class="badge badge-warning" id="lblCartCount">'.$row.'</span></li>';
+    }
+} else {
+    echo '<li><a href="connexionClient.php" style="color:white">Connexion</a></li>';
+}
+                                                    ?>
                                 </ul>
                             </nav>
                         </div>
@@ -291,7 +323,7 @@ require_once '../connection.php';
                             <br /><br /><br />
                             <hr>
                             <!-- FIN en tête -->
-
+                            <a href="infocl.php"> Inscription </a>
 
                             <div class="login">
                                 <?php
@@ -302,7 +334,7 @@ require_once '../connection.php';
                                         case 'password':
                                 ?>
                                             <div class="alert alert-danger">
-                                                <strong>Erreur</strong> mot de passe incorrect
+                                                <strong>Erreur</strong> mot de passe incorrect, un email de réinitialisation vous a été envoyé
                                             </div>
                                         <?php
                                             break;
@@ -328,10 +360,10 @@ require_once '../connection.php';
                                 <form action="infoconnexion.php" method="post">
                                     <h2 class="text-center">Connexion</h2>
                                     <div class="form-group">
-                                        <input type="email" name="email" class="form-control" placeholder="Email" required="required" autocomplete="off">
+                                        <input type="email" name="email" class="form-control" placeholder="Email" required="required"  >
                                     </div>
                                     <div class="form-group">
-                                        <input type="password" name="password" class="form-control" placeholder="Mot de passe" required="required" autocomplete="off">
+                                        <input type="password" name="password" class="form-control" placeholder="Mot de passe" required="required"  >
                                     </div>
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-primary btn-block">Connexion</button>
@@ -400,7 +432,7 @@ require_once '../connection.php';
                                     <div class="col-md-3 col-sm-4 col-xs-6">
                                         <div class="single-footer mt-0">
                                             <div class="logo">
-                                                <img src="../images/logo/logo.png" alt="">
+                                                <img src="../images/logo/logo.png" alt="" style="background: white;">
                                             </div>
                                             <div class="f-adress">
                                                 <p>

@@ -119,7 +119,7 @@
                                                 <nav>
                                                     <ul>
                                                         <li><a href="../chambre/chambres.php">Rooms</a></li>
-                                                        <li><a href="./seminaires.php">Seminars</a></li>
+                                                        <li><a href="./seminaires.php" class="btn btn-danger">Seminars</a></li>
                                                         <li><a href="../restaurant/resto.php">Restaurant</a></li>
                                                         <li><a href="../loisir/loisirs.php">Hobbies</a></li>
                                                         <li><a href="../reservation/detailang.php">Reservation</a></li>
@@ -137,13 +137,14 @@
                     <div class="mobile-menu-area hidden-lg hidden-md">
                         <div class="container">
                             <div class="col-md-12">
-                                <nav id="dropdown">
+                                <nav>
                                     <ul>
                                         
-                                        <li><a href="../chambre/chambres.php">Rooms</a></li>
-                                        <li><a href="./seminaires.php">Seminars</a></li>
-                                        <li><a href="../restaurant/resto.php">Restaurant</a></li>
-                                        <li><a href="../loisir/loisirs.php">Hobbies</a></li>
+                                    <li><a href="../chambre/chambres.php" style="color:white">Rooms</a></li>
+                                                        <li><a href="./seminaires.php" style="color:red">Seminars</a></li>
+                                                        <li><a href="../restaurant/resto.php" style="color:white">Restaurant</a></li>
+                                                        <li><a href="../loisir/loisirs.php" style="color:white">Hobbies</a></li>
+                                                        <li><a href="../reservation/detailang.php" style="color:white">Reservation</a></li>
                                        
                                     </ul>
                                 </nav>
